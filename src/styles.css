@@ -5,13 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-cream: #f9f5f1;
-  --color-cream-soft: #f3ece4;
-  --color-ink: #1a1714;
+  --color-cream: var(--cream);
+  --color-cream-soft: var(--cream-soft);
+  --color-ink: var(--ink);
   --color-sienna: #a0522d;
   --color-copper: #cd7f32;
   --color-burnt: #6b3a2a;
   --color-sand: #e8c07a;
+  --color-night: #1a1714;
+  --color-paper: #f9f5f1;
   --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
@@ -45,16 +47,19 @@
 
 :root {
   --radius: 0.5rem;
-  --background: #f9f5f1;
-  --foreground: #1a1714;
+  --cream: #f9f5f1;
+  --cream-soft: #f3ece4;
+  --ink: #1a1714;
+  --background: var(--cream);
+  --foreground: var(--ink);
   --card: #ffffff;
-  --card-foreground: #1a1714;
+  --card-foreground: var(--ink);
   --popover: #ffffff;
-  --popover-foreground: #1a1714;
+  --popover-foreground: var(--ink);
   --primary: #6b3a2a;
   --primary-foreground: #f9f5f1;
   --secondary: #f3ece4;
-  --secondary-foreground: #1a1714;
+  --secondary-foreground: var(--ink);
   --muted: #f3ece4;
   --muted-foreground: #6b6259;
   --accent: #a0522d;
@@ -64,6 +69,29 @@
   --border: rgba(26, 23, 20, 0.12);
   --input: rgba(26, 23, 20, 0.12);
   --ring: #a0522d;
+}
+
+.dark {
+  --cream: #14110f;
+  --cream-soft: #1f1a16;
+  --ink: #f3ece4;
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --card: #1f1a16;
+  --card-foreground: var(--ink);
+  --popover: #1f1a16;
+  --popover-foreground: var(--ink);
+  --primary: #e8c07a;
+  --primary-foreground: #14110f;
+  --secondary: #2a221d;
+  --secondary-foreground: var(--ink);
+  --muted: #2a221d;
+  --muted-foreground: #a89a8b;
+  --accent: #cd7f32;
+  --accent-foreground: #14110f;
+  --border: rgba(243, 236, 228, 0.12);
+  --input: rgba(243, 236, 228, 0.12);
+  --ring: #e8c07a;
 }
 
 @keyframes fadeIn {
