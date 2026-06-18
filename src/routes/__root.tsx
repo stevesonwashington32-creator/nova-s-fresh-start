@@ -77,21 +77,41 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Nova — Fine Dining, Est. 2022" },
-      { name: "description", content: "Nova is an intimate fine dining restaurant. Reserve your evening — a quiet dialogue between the land and the table." },
-      { name: "author", content: "Nova" },
-      { property: "og:title", content: "Nova — Fine Dining" },
-      { property: "og:description", content: "Reserve an evening at Nova. Seasonal tasting menu, candlelit room, intentional luxury." },
+      { name: "theme-color", content: "#1a1714" },
+      { property: "og:site_name", content: "Nova" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Restaurant",
+          name: "Nova",
+          description: "Intimate fine dining. Seasonal tasting menu.",
+          servesCuisine: "Modern Nordic",
+          priceRange: "$$$$",
+          acceptsReservations: "True",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Strandgade 93",
+            addressLocality: "København",
+            postalCode: "1401",
+            addressCountry: "DK",
+          },
+          openingHours: "Tu-Sa 18:00-23:00",
+        }),
       },
     ],
   }),
@@ -103,9 +123,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('nova-theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
         {children}
