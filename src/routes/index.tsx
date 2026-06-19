@@ -248,7 +248,7 @@ function Index() {
                     </button>
                   </div>
                 ) : (
-                <form className="space-y-7" onSubmit={(e) => { e.preventDefault(); mut.mutate(); }}>
+                <form className="space-y-7" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Name">
                       <input type="text" required maxLength={120} value={form.guest_name} onChange={(e) => setForm({ ...form, guest_name: e.target.value })} placeholder="Full name" className="w-full bg-transparent border-b py-2 text-sm placeholder:text-ink/30 focus:border-sienna outline-none transition-colors" />
@@ -260,7 +260,7 @@ function Index() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Date">
-                      <input type="date" required value={form.reservation_date} onChange={(e) => setForm({ ...form, reservation_date: e.target.value })} className="w-full bg-transparent border-b py-2 text-sm focus:border-sienna outline-none transition-colors" />
+                      <input type="date" required min={todayStr()} value={form.reservation_date} onChange={(e) => setForm({ ...form, reservation_date: e.target.value })} className="w-full bg-transparent border-b py-2 text-sm focus:border-sienna outline-none transition-colors" />
                     </Field>
                     <Field label="Occasion (optional)">
                       <select value={form.occasion} onChange={(e) => setForm({ ...form, occasion: e.target.value })} className="w-full bg-transparent border-b py-2 text-sm focus:border-sienna outline-none transition-colors">
@@ -278,13 +278,19 @@ function Index() {
                   <div>
                     <Label>Preferred Time</Label>
                     <div className="flex flex-wrap gap-2">
-                      {TIMES.map((t) => (
-                        <button key={t} type="button" onClick={() => setTime(t)}
-                          className={"px-4 py-2 text-xs uppercase tracking-wider transition-all border " +
-                            (time === t ? "bg-sienna text-paper border-sienna" : "text-ink/70 hover:border-sienna hover:text-sienna")}>
-                          {t}
-                        </button>
-                      ))}
+                      {TIMES.map((t) => {
+                        const disabled = isToday && isPastTime(form.reservation_date, t);
+                        return (
+                          <button key={t} type="button" disabled={disabled}
+                            onClick={() => !disabled && setTime(t)}
+                            className={"px-4 py-2 text-xs uppercase tracking-wider transition-all border " +
+                              (disabled
+                                ? "opacity-30 cursor-not-allowed line-through"
+                                : time === t ? "bg-sienna text-paper border-sienna" : "text-ink/70 hover:border-sienna hover:text-sienna")}>
+                            {t}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -310,14 +316,19 @@ function Index() {
                     />
                   </Field>
 
-                  <p className="text-[11px] text-ink/50 leading-relaxed border-l-2 border-sand/60 pl-4">
-                    I understand that if I am more than 45 minutes late, my reservation may be
-                    canceled and the table reassigned.
-                  </p>
+                  <label className="flex gap-3 text-[11px] text-ink/60 leading-relaxed border-l-2 border-sand/60 pl-4 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={agreeLate}
+                      onChange={(e) => setAgreeLate(e.target.checked)}
+                      className="mt-0.5 accent-sienna"
+                    />
+                    <span>I understand that if I am more than 45 minutes late, my reservation may be canceled and the table reassigned.</span>
+                  </label>
 
-                  {mut.error && (
+                  {(formError || mut.error) && (
                     <p className="text-xs text-burnt bg-burnt/10 border border-burnt/30 px-3 py-2">
-                      {(mut.error as Error).message}
+                      {formError || (mut.error as Error)?.message}
                     </p>
                   )}
 
@@ -328,14 +339,58 @@ function Index() {
                     {mut.isPending ? "Securing your table…" : "Confirm Reservation"}
                   </button>
 
-                  <div className="grid grid-cols-2 gap-6 pt-6 border-t text-[11px]">
+                  <div className="pt-6 border-t space-y-6 text-[11px]">
                     <div>
                       <p className="uppercase tracking-widest text-ink/40 mb-1">Running late?</p>
                       <a href="tel:+2349039986098" className="text-sienna hover:text-burnt transition-colors">+234 903 998 6098</a>
                     </div>
                     <div>
-                      <p className="uppercase tracking-widest text-ink/40 mb-1">Cancel a reservation</p>
-                      <a href="#" className="text-sienna hover:text-burnt transition-colors">Find reservation →</a>
+                      <p className="uppercase tracking-widest text-ink/40 mb-2">Cancel a reservation</p>
+                      <p className="text-ink/50 mb-3">Use the phone number from your booking to find and cancel.</p>
+                      <div className="flex gap-2">
+                        <input
+                          type="tel"
+                          value={lookupPhone}
+                          onChange={(e) => { setLookupPhone(e.target.value); setLookupError(""); setLookupSuccess(""); }}
+                          placeholder="Phone number"
+                          className="flex-1 bg-transparent border-b py-2 text-sm placeholder:text-ink/30 focus:border-sienna outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleFind}
+                          disabled={findMut.isPending}
+                          className="px-4 text-[10px] uppercase tracking-widest border border-ink/30 hover:border-sienna hover:text-sienna disabled:opacity-50"
+                        >
+                          {findMut.isPending ? "…" : "Find"}
+                        </button>
+                      </div>
+                      {lookupError && <p className="mt-2 text-burnt">{lookupError}</p>}
+                      {lookupSuccess && <p className="mt-2 text-sienna">{lookupSuccess}</p>}
+                      {found.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                          {found.map((r) => (
+                            <div key={r.id} className="flex items-center justify-between border border-ink/10 px-3 py-2">
+                              <div>
+                                <p className="text-sienna font-medium">{r.ref}</p>
+                                <p className="text-ink/60">
+                                  {new Date(r.reservation_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })} · {r.reservation_time}
+                                </p>
+                                <p className="text-ink/40 text-[10px] uppercase tracking-widest">Status: {r.status}</p>
+                              </div>
+                              {r.status !== "cancelled" && (
+                                <button
+                                  type="button"
+                                  onClick={() => { if (confirm("Cancel this reservation?")) cancelMut.mutate(r.id); }}
+                                  disabled={cancelMut.isPending}
+                                  className="text-[10px] uppercase tracking-widest text-burnt hover:underline disabled:opacity-50"
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </form>
@@ -343,6 +398,7 @@ function Index() {
               </div>
             </div>
           </section>
+
 
           <section id="story" className="px-8 lg:px-16 py-24 border-b">
             <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">Our Story</span>
