@@ -4,6 +4,8 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
 
+const STATUSES = ["pending", "confirmed", "arrived", "late", "completed", "cancelled"] as const;
+
 const ReservationInput = z.object({
   guest_name: z.string().trim().min(1).max(120),
   phone: z.string().trim().min(5).max(40),
@@ -19,14 +21,18 @@ function makeRef() {
   return `NOV-${n}`;
 }
 
+function publicClient() {
+  return createClient<Database>(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_PUBLISHABLE_KEY!,
+    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
+  );
+}
+
 export const createReservation = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => ReservationInput.parse(d))
   .handler(async ({ data }) => {
-    const supa = createClient<Database>(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PUBLISHABLE_KEY!,
-      { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-    );
+    const supa = publicClient();
     const ref = makeRef();
     const { data: row, error } = await supa
       .from("reservations")
@@ -35,6 +41,47 @@ export const createReservation = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
     return { ref: row.ref };
+  });
+
+// Public lookup by phone — uses admin client, returns minimal fields, no auth.
+export const findReservationsByPhone = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => z.object({ phone: z.string().trim().min(5).max(40) }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const today = new Date().toISOString().slice(0, 10);
+    const { data: rows, error } = await supabaseAdmin
+      .from("reservations")
+      .select("id, ref, reservation_date, reservation_time, status, guest_name")
+      .eq("phone", data.phone)
+      .gte("reservation_date", today)
+      .order("reservation_date", { ascending: true });
+    if (error) throw new Error(error.message);
+    return { reservations: rows ?? [] };
+  });
+
+// Public cancel by id + phone — owner-only via phone match.
+export const cancelReservationByPhone = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) =>
+    z.object({ id: z.string().uuid(), phone: z.string().trim().min(5).max(40) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const today = new Date().toISOString().slice(0, 10);
+    const { data: row, error: fErr } = await supabaseAdmin
+      .from("reservations")
+      .select("id, phone, reservation_date, status")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (fErr) throw new Error(fErr.message);
+    if (!row) throw new Error("Reservation not found");
+    if (row.phone !== data.phone) throw new Error("Phone does not match this reservation");
+    if (row.reservation_date < today) throw new Error("Cannot cancel past reservations");
+    const { error } = await supabaseAdmin
+      .from("reservations")
+      .update({ status: "cancelled" })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });
 
 export const listReservations = createServerFn({ method: "GET" })
@@ -51,7 +98,7 @@ export const listReservations = createServerFn({ method: "GET" })
       .select("*")
       .order("reservation_date", { ascending: false })
       .order("reservation_time", { ascending: true })
-      .limit(200);
+      .limit(500);
     if (error) throw new Error(error.message);
     return { reservations: data ?? [] };
   });
@@ -61,7 +108,7 @@ export const updateReservationStatus = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
     z.object({
       id: z.string().uuid(),
-      status: z.enum(["pending", "confirmed", "completed", "cancelled"]),
+      status: z.enum(STATUSES),
     }).parse(d),
   )
   .handler(async ({ data, context }) => {
@@ -69,6 +116,38 @@ export const updateReservationStatus = createServerFn({ method: "POST" })
       .from("reservations")
       .update({ status: data.status })
       .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const rescheduleReservation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      id: z.string().uuid(),
+      reservation_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      reservation_time: z.string().min(1).max(10),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const today = new Date().toISOString().slice(0, 10);
+    if (data.reservation_date < today) throw new Error("Cannot reschedule to a past date");
+    const { error } = await context.supabase
+      .from("reservations")
+      .update({
+        reservation_date: data.reservation_date,
+        reservation_time: data.reservation_time,
+      })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const deleteReservation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("reservations").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
