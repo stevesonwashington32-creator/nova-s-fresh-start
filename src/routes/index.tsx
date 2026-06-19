@@ -38,19 +38,51 @@ const COURSES = [
   { tag: "IV. Hearth", name: "Burnt Honey & Cultured Cream", note: "Birchwood, sourdough crumb, bee pollen" },
 ];
 
+type FoundReservation = {
+  id: string;
+  ref: string;
+  reservation_date: string;
+  reservation_time: string;
+  status: string;
+  guest_name: string;
+};
+
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
+function isPastTime(date: string, time: string) {
+  if (!date || !time) return false;
+  const [h, m] = time.split(":").map(Number);
+  const d = new Date(date + "T00:00:00");
+  d.setHours(h, m, 0, 0);
+  return d <= new Date();
+}
+
+const normalizePhone = (v: string) => String(v || "").replace(/\D/g, "");
+
 function Index() {
   const [time, setTime] = useState("19:30");
   const [party, setParty] = useState("2");
   const [form, setForm] = useState({
     guest_name: "",
     phone: "",
-    reservation_date: "",
+    reservation_date: todayStr(),
     occasion: "",
     special_requests: "",
   });
+  const [agreeLate, setAgreeLate] = useState(false);
+  const [formError, setFormError] = useState("");
   const [confirmed, setConfirmed] = useState<string | null>(null);
 
+  // Find/cancel state
+  const [lookupPhone, setLookupPhone] = useState("");
+  const [lookupError, setLookupError] = useState("");
+  const [lookupSuccess, setLookupSuccess] = useState("");
+  const [found, setFound] = useState<FoundReservation[]>([]);
+
   const create = useServerFn(createReservation);
+  const findFn = useServerFn(findReservationsByPhone);
+  const cancelFn = useServerFn(cancelReservationByPhone);
+
   const mut = useMutation({
     mutationFn: () => create({
       data: {
@@ -65,9 +97,53 @@ function Index() {
     }),
     onSuccess: (r) => {
       setConfirmed(r.ref);
-      setForm({ guest_name: "", phone: "", reservation_date: "", occasion: "", special_requests: "" });
+      setFormError("");
     },
   });
+
+  const findMut = useMutation({
+    mutationFn: (phone: string) => findFn({ data: { phone } }),
+    onSuccess: (r) => {
+      setFound(r.reservations as FoundReservation[]);
+      if (!r.reservations.length) setLookupError("No upcoming reservation for that phone number.");
+    },
+    onError: (e: Error) => setLookupError(e.message),
+  });
+
+  const cancelMut = useMutation({
+    mutationFn: (id: string) => cancelFn({ data: { id, phone: lookupPhone } }),
+    onSuccess: (_d, id) => {
+      setFound((list) => list.map((r) => (r.id === id ? { ...r, status: "cancelled" } : r)));
+      setLookupSuccess("Reservation cancelled.");
+    },
+    onError: (e: Error) => setLookupError(e.message),
+  });
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError("");
+    if (!form.guest_name.trim()) return setFormError("Please enter your name.");
+    if (normalizePhone(form.phone).length < 7) return setFormError("Please enter a valid phone number.");
+    if (!form.reservation_date) return setFormError("Please select a date.");
+    if (!time) return setFormError("Please choose a preferred time.");
+    if (!party) return setFormError("Please select your party size.");
+    if (!agreeLate) return setFormError("Please acknowledge the late arrival policy.");
+    if (form.reservation_date === todayStr() && isPastTime(form.reservation_date, time)) {
+      return setFormError("Please choose a future time for today.");
+    }
+    mut.mutate();
+  }
+
+  function handleFind() {
+    setLookupError("");
+    setLookupSuccess("");
+    setFound([]);
+    if (!lookupPhone.trim()) return setLookupError("Enter the phone number used for the booking.");
+    findMut.mutate(lookupPhone.trim());
+  }
+
+  const isToday = form.reservation_date === todayStr();
+
 
   return (
     <div className="min-h-screen bg-cream text-ink selection:bg-sienna/20" style={{ fontFamily: "var(--font-body)" }}>
