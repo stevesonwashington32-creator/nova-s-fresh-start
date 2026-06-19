@@ -4,7 +4,11 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import diningRoom from "@/assets/dining-room.jpg";
 import plateDetail from "@/assets/plate-detail.jpg";
-import { createReservation } from "@/lib/reservations.functions";
+import {
+  createReservation,
+  findReservationsByPhone,
+  cancelReservationByPhone,
+} from "@/lib/reservations.functions";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
