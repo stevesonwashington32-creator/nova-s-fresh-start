@@ -260,10 +260,17 @@ function Index() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Date">
-                      <input type="date" required min={todayStr()} value={form.reservation_date} onChange={(e) => setForm({ ...form, reservation_date: e.target.value })} className="w-full bg-transparent border-b py-2 text-sm focus:border-sienna outline-none transition-colors" />
+                      <input type="date" required min={todayStr()} value={form.reservation_date} onChange={(e) => setForm({ ...form, reservation_date: e.target.value })} style={{ colorScheme: "dark" }} className="w-full bg-transparent border-b py-2 pr-2 text-sm focus:border-sienna outline-none transition-colors" />
                     </Field>
                     <Field label="Occasion (optional)">
-                      <select value={form.occasion} onChange={(e) => setForm({ ...form, occasion: e.target.value })} className="w-full bg-transparent border-b py-2 text-sm focus:border-sienna outline-none transition-colors">
+                      <select
+                        value={form.occasion}
+                        onChange={(e) => setForm({ ...form, occasion: e.target.value })}
+                        style={{ colorScheme: "dark" }}
+                        className="w-full appearance-none bg-transparent border-b py-2 pr-8 text-sm focus:border-sienna outline-none transition-colors bg-no-repeat bg-[right_0.25rem_center] bg-[length:1rem] [&>option]:bg-night [&>option]:text-paper"
+                        // chevron via inline SVG so it works in both themes
+                        // eslint-disable-next-line react/no-unknown-property
+                      >
                         <option value="">Select occasion</option>
                         <option>Birthday Celebration</option>
                         <option>Anniversary</option>
