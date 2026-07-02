@@ -1,15 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import diningRoom from "@/assets/dining-room.jpg";
-import plateDetail from "@/assets/plate-detail.jpg";
 import {
   createReservation,
   findReservationsByPhone,
   cancelReservationByPhone,
 } from "@/lib/reservations.functions";
+import { getPlaceReviews, type PlaceReview } from "@/lib/reviews.functions";
 import { ThemeToggle } from "@/components/theme-toggle";
+
+const reviewsQuery = queryOptions({
+  queryKey: ["place-reviews"],
+  queryFn: () => getPlaceReviews(),
+  staleTime: 1000 * 60 * 30,
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,18 +32,14 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(reviewsQuery);
+  },
   component: Index,
 });
 
 const TIMES = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30"];
 const PARTY = ["1", "2", "3", "4", "5", "6+"];
-
-const COURSES = [
-  { tag: "I. Earth", name: "Charred Leeks & Hazelnut Emulsion", note: "Wild garlic, toasted hazelnuts, brown butter" },
-  { tag: "II. Sea", name: "Hand-Dived Scallops in Copper", note: "Brown butter, sea buckthorn, coastal herbs" },
-  { tag: "III. Fire", name: "Dry-Aged Venison", note: "Pine needle smoke, fermented roots, juniper" },
-  { tag: "IV. Hearth", name: "Burnt Honey & Cultured Cream", note: "Birchwood, sourdough crumb, bee pollen" },
-];
 
 type FoundReservation = {
   id: string;
@@ -151,7 +154,6 @@ function Index() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-6 flex justify-between items-center mix-blend-difference text-paper">
         <a href="#" className="text-xs uppercase tracking-[0.35em] font-medium">Nova &mdash; Est. 2022</a>
         <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.25em] font-medium items-center">
-          <a href="#menu" className="hover:text-sand transition-colors">Menu</a>
           <a href="#story" className="hover:text-sand transition-colors">Our Story</a>
           <a href="#reserve" className="hover:text-sand transition-colors">Reservations</a>
           <Link to="/auth" className="hover:text-sand transition-colors">Staff</Link>
@@ -161,25 +163,9 @@ function Index() {
       </nav>
 
       <main className="grid lg:grid-cols-2 min-h-screen">
-        {/* Left: sticky atmospheric pane (always dark) */}
+        {/* Left: sticky reviews slider */}
         <div className="relative h-[60vh] lg:h-screen lg:sticky lg:top-0 overflow-hidden bg-night">
-          <img
-            src={diningRoom}
-            alt="Candlelit dining room at Nova with copper pans hanging above"
-            width={1080}
-            height={1920}
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-night/30 via-transparent to-night/80" />
-          <div className="absolute top-0 left-0 right-0 p-10 hidden lg:block">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-paper/60">Strandgade 93 — København</span>
-          </div>
-          <div className="absolute bottom-10 left-8 right-8 lg:left-12 lg:right-12 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl italic text-paper leading-[1.1] text-balance" style={{ fontFamily: "var(--font-display)" }}>
-              &ldquo;A quiet dialogue between the land and the table.&rdquo;
-            </h2>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.35em] text-paper/60">— Chef's Note</p>
-          </div>
+          <ReviewsSlider />
         </div>
 
         {/* Right: scrolling magazine column */}
@@ -199,36 +185,9 @@ function Index() {
             </a>
           </section>
 
-          <section className="grid lg:grid-cols-2 border-b">
-            <div id="menu" className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r">
-              <div className="flex items-baseline justify-between mb-12">
-                <h3 className="text-2xl italic" style={{ fontFamily: "var(--font-display)" }}>The Tasting Menu</h3>
-                <span className="text-[10px] uppercase tracking-widest text-ink/40">Autumn</span>
-              </div>
-              <div className="space-y-9">
-                {COURSES.map((c) => (
-                  <div key={c.tag} className="group">
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-sienna">{c.tag}</span>
-                    <h4 className="text-xl mt-1.5 group-hover:italic transition-all" style={{ fontFamily: "var(--font-display)" }}>{c.name}</h4>
-                    <p className="text-sm text-ink/60 mt-1.5 leading-relaxed">{c.note}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-12 text-[11px] uppercase tracking-[0.2em] text-ink/40">Seven courses · 1,250 DKK per guest</p>
-              <div className="mt-12 overflow-hidden">
-                <img
-                  src={plateDetail}
-                  alt="A minimalist plated course with herb oil"
-                  width={800}
-                  height={1066}
-                  loading="lazy"
-                  className="w-full aspect-[3/4] object-cover"
-                />
-              </div>
-            </div>
-
+          <section className="border-b">
             <div id="reserve" className="p-8 lg:p-12 bg-cream-soft">
-              <div className="lg:sticky lg:top-24">
+              <div className="max-w-2xl mx-auto">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold block mb-3">Reservation</span>
                 <h3 className="text-4xl mb-2" style={{ fontFamily: "var(--font-display)" }}>
                   Reserve Your <span className="italic text-burnt">Evening</span>
@@ -460,4 +419,100 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function Label({ children }: { children: React.ReactNode }) {
   return <label className="text-[10px] uppercase tracking-[0.25em] text-ink/50 block mb-3">{children}</label>;
+}
+
+function ReviewsSlider() {
+  const { data } = useSuspenseQuery(reviewsQuery);
+  const reviews = data.reviews;
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 });
+  const [selected, setSelected] = useState(0);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    onSelect();
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi || reviews.length <= 1) return;
+    const id = setInterval(() => emblaApi.scrollNext(), 7000);
+    return () => clearInterval(id);
+  }, [emblaApi, reviews.length]);
+
+  if (!reviews.length) {
+    return (
+      <>
+        <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-night/40 via-night/30 to-night/80" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
+        <div className="flex h-full">
+          {reviews.map((r, i) => (
+            <ReviewSlide key={i} review={r} />
+          ))}
+        </div>
+      </div>
+
+      <div className="absolute top-0 left-0 right-0 p-8 lg:p-10 flex items-center justify-between z-10">
+        <span className="text-[10px] uppercase tracking-[0.4em] text-paper/70">Guest Reviews · Google</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
+          ★ {data.rating.toFixed(1)} · {data.userRatingCount}
+        </span>
+      </div>
+
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+        {reviews.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to review ${i + 1}`}
+            onClick={() => emblaApi?.scrollTo(i)}
+            className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
+          />
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ReviewSlide({ review }: { review: PlaceReview }) {
+  const bg = review.photoUri ?? diningRoom;
+  return (
+    <div className="relative flex-[0_0_100%] min-w-0 h-full">
+      <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
+      <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-16 text-center">
+        <div className="flex gap-1 mb-6 text-sienna text-sm tracking-widest">
+          {"★".repeat(Math.max(1, Math.min(5, review.rating)))}
+        </div>
+        <blockquote
+          className="text-paper text-xl lg:text-2xl italic leading-relaxed max-w-[38ch] text-balance line-clamp-[10]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          &ldquo;{review.text}&rdquo;
+        </blockquote>
+        <div className="mt-8 flex flex-col items-center gap-2">
+          {review.authorPhoto && (
+            <img
+              src={review.authorPhoto}
+              alt={review.author}
+              className="w-10 h-10 rounded-full object-cover border border-paper/20"
+              loading="lazy"
+            />
+          )}
+          <p className="text-[11px] uppercase tracking-[0.35em] text-paper font-medium">{review.author}</p>
+          {review.relativeTime && (
+            <p className="text-[10px] uppercase tracking-[0.3em] text-paper/50">{review.relativeTime}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
