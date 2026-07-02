@@ -41,12 +41,16 @@ export const Route = createFileRoute("/")({
 const TIMES = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30"];
 const PARTY = ["1", "2", "3", "4", "5", "6+"];
 
-const COURSES = [
-  { tag: "I. Earth", name: "Charred Leeks & Hazelnut Emulsion", note: "Wild garlic, toasted hazelnuts, brown butter" },
-  { tag: "II. Sea", name: "Hand-Dived Scallops in Copper", note: "Brown butter, sea buckthorn, coastal herbs" },
-  { tag: "III. Fire", name: "Dry-Aged Venison", note: "Pine needle smoke, fermented roots, juniper" },
-  { tag: "IV. Hearth", name: "Burnt Honey & Cultured Cream", note: "Birchwood, sourdough crumb, bee pollen" },
-];
+const COURSES_REMOVED = true; void COURSES_REMOVED;
+
+type FoundReservation = {
+  id: string;
+  ref: string;
+  reservation_date: string;
+  reservation_time: string;
+  status: string;
+  guest_name: string;
+};
 
 type FoundReservation = {
   id: string;
