@@ -164,25 +164,9 @@ function Index() {
       </nav>
 
       <main className="grid lg:grid-cols-2 min-h-screen">
-        {/* Left: sticky atmospheric pane (always dark) */}
+        {/* Left: sticky reviews slider */}
         <div className="relative h-[60vh] lg:h-screen lg:sticky lg:top-0 overflow-hidden bg-night">
-          <img
-            src={diningRoom}
-            alt="Candlelit dining room at Nova with copper pans hanging above"
-            width={1080}
-            height={1920}
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-night/30 via-transparent to-night/80" />
-          <div className="absolute top-0 left-0 right-0 p-10 hidden lg:block">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-paper/60">Strandgade 93 — København</span>
-          </div>
-          <div className="absolute bottom-10 left-8 right-8 lg:left-12 lg:right-12 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl italic text-paper leading-[1.1] text-balance" style={{ fontFamily: "var(--font-display)" }}>
-              &ldquo;A quiet dialogue between the land and the table.&rdquo;
-            </h2>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.35em] text-paper/60">— Chef's Note</p>
-          </div>
+          <ReviewsSlider />
         </div>
 
         {/* Right: scrolling magazine column */}
@@ -202,36 +186,9 @@ function Index() {
             </a>
           </section>
 
-          <section className="grid lg:grid-cols-2 border-b">
-            <div id="menu" className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r">
-              <div className="flex items-baseline justify-between mb-12">
-                <h3 className="text-2xl italic" style={{ fontFamily: "var(--font-display)" }}>The Tasting Menu</h3>
-                <span className="text-[10px] uppercase tracking-widest text-ink/40">Autumn</span>
-              </div>
-              <div className="space-y-9">
-                {COURSES.map((c) => (
-                  <div key={c.tag} className="group">
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-sienna">{c.tag}</span>
-                    <h4 className="text-xl mt-1.5 group-hover:italic transition-all" style={{ fontFamily: "var(--font-display)" }}>{c.name}</h4>
-                    <p className="text-sm text-ink/60 mt-1.5 leading-relaxed">{c.note}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-12 text-[11px] uppercase tracking-[0.2em] text-ink/40">Seven courses · 1,250 DKK per guest</p>
-              <div className="mt-12 overflow-hidden">
-                <img
-                  src={plateDetail}
-                  alt="A minimalist plated course with herb oil"
-                  width={800}
-                  height={1066}
-                  loading="lazy"
-                  className="w-full aspect-[3/4] object-cover"
-                />
-              </div>
-            </div>
-
+          <section className="border-b">
             <div id="reserve" className="p-8 lg:p-12 bg-cream-soft">
-              <div className="lg:sticky lg:top-24">
+              <div className="max-w-2xl mx-auto">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold block mb-3">Reservation</span>
                 <h3 className="text-4xl mb-2" style={{ fontFamily: "var(--font-display)" }}>
                   Reserve Your <span className="italic text-burnt">Evening</span>
