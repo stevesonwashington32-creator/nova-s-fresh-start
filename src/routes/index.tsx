@@ -437,7 +437,7 @@ function ReviewsSlider() {
 
   useEffect(() => {
     if (!emblaApi || reviews.length <= 1) return;
-    const id = setInterval(() => emblaApi.scrollNext(), 7000);
+    const id = setInterval(() => emblaApi.scrollNext(), 10000);
     return () => clearInterval(id);
   }, [emblaApi, reviews.length]);
 
@@ -483,10 +483,9 @@ function ReviewsSlider() {
 }
 
 function ReviewSlide({ review }: { review: PlaceReview }) {
-  const bg = review.photoUri ?? diningRoom;
   return (
     <div className="relative flex-[0_0_100%] min-w-0 h-full">
-      <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <img src={diningRoom} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
       <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-16 text-center">
         <div className="flex gap-1 mb-6 text-sienna text-sm tracking-widest">
