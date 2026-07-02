@@ -1,15 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import diningRoom from "@/assets/dining-room.jpg";
-import plateDetail from "@/assets/plate-detail.jpg";
 import {
   createReservation,
   findReservationsByPhone,
   cancelReservationByPhone,
 } from "@/lib/reservations.functions";
+import { getPlaceReviews, type PlaceReview } from "@/lib/reviews.functions";
 import { ThemeToggle } from "@/components/theme-toggle";
+
+const reviewsQuery = queryOptions({
+  queryKey: ["place-reviews"],
+  queryFn: () => getPlaceReviews(),
+  staleTime: 1000 * 60 * 30,
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,6 +32,9 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(reviewsQuery);
+  },
   component: Index,
 });
 
