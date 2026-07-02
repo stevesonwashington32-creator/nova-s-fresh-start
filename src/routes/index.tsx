@@ -420,3 +420,99 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Label({ children }: { children: React.ReactNode }) {
   return <label className="text-[10px] uppercase tracking-[0.25em] text-ink/50 block mb-3">{children}</label>;
 }
+
+function ReviewsSlider() {
+  const { data } = useSuspenseQuery(reviewsQuery);
+  const reviews = data.reviews;
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 });
+  const [selected, setSelected] = useState(0);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    onSelect();
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi || reviews.length <= 1) return;
+    const id = setInterval(() => emblaApi.scrollNext(), 7000);
+    return () => clearInterval(id);
+  }, [emblaApi, reviews.length]);
+
+  if (!reviews.length) {
+    return (
+      <>
+        <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-night/40 via-night/30 to-night/80" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
+        <div className="flex h-full">
+          {reviews.map((r, i) => (
+            <ReviewSlide key={i} review={r} />
+          ))}
+        </div>
+      </div>
+
+      <div className="absolute top-0 left-0 right-0 p-8 lg:p-10 flex items-center justify-between z-10">
+        <span className="text-[10px] uppercase tracking-[0.4em] text-paper/70">Guest Reviews · Google</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
+          ★ {data.rating.toFixed(1)} · {data.userRatingCount}
+        </span>
+      </div>
+
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+        {reviews.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to review ${i + 1}`}
+            onClick={() => emblaApi?.scrollTo(i)}
+            className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
+          />
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ReviewSlide({ review }: { review: PlaceReview }) {
+  const bg = review.photoUri ?? diningRoom;
+  return (
+    <div className="relative flex-[0_0_100%] min-w-0 h-full">
+      <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
+      <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-16 text-center">
+        <div className="flex gap-1 mb-6 text-sienna text-sm tracking-widest">
+          {"★".repeat(Math.max(1, Math.min(5, review.rating)))}
+        </div>
+        <blockquote
+          className="text-paper text-xl lg:text-2xl italic leading-relaxed max-w-[38ch] text-balance line-clamp-[10]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          &ldquo;{review.text}&rdquo;
+        </blockquote>
+        <div className="mt-8 flex flex-col items-center gap-2">
+          {review.authorPhoto && (
+            <img
+              src={review.authorPhoto}
+              alt={review.author}
+              className="w-10 h-10 rounded-full object-cover border border-paper/20"
+              loading="lazy"
+            />
+          )}
+          <p className="text-[11px] uppercase tracking-[0.35em] text-paper font-medium">{review.author}</p>
+          {review.relativeTime && (
+            <p className="text-[10px] uppercase tracking-[0.3em] text-paper/50">{review.relativeTime}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
