@@ -154,7 +154,6 @@ function Index() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-6 flex justify-between items-center mix-blend-difference text-paper">
         <a href="#" className="text-xs uppercase tracking-[0.35em] font-medium">Nova &mdash; Est. 2022</a>
         <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.25em] font-medium items-center">
-          <a href="#menu" className="hover:text-sand transition-colors">Menu</a>
           <a href="#story" className="hover:text-sand transition-colors">Our Story</a>
           <a href="#reserve" className="hover:text-sand transition-colors">Reservations</a>
           <Link to="/auth" className="hover:text-sand transition-colors">Staff</Link>
