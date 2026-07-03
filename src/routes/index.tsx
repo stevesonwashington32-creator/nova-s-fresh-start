@@ -379,14 +379,15 @@ function Index() {
               Born from the <span className="italic text-burnt">embers</span>.
             </h3>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70 mb-6">
-              Nova began as a single hearth in a quiet courtyard. Four years on, we remain
-              devoted to that first idea &mdash; that fire, patiently tended, can render
-              the simplest ingredient into memory.
+              Nova opened its doors on Okpanam Road with a single idea &mdash; a warm,
+              considered room where Asaba could gather from morning coffee to a late
+              nightcap, without ever feeling rushed.
             </p>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70">
-              Our menu shifts with the season; our room holds twenty-four guests; our copper
-              pans hang from the same iron rack they did on opening night.
+              Our kitchen serves through the day; our bar keeps company into the night;
+              our tables are yours for as long as you'd like them.
             </p>
+
           </section>
 
           <footer className="bg-night text-paper p-10 lg:p-16">
