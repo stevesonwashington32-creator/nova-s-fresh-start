@@ -21,11 +21,11 @@ const reviewsQuery = queryOptions({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Nova — Reserve Your Evening | Fine Dining, København" },
-      { name: "description", content: "Reserve a table at Nova, an intimate fine dining restaurant in København. Seven-course seasonal tasting menu in a candlelit room. Est. 2022." },
-      { name: "keywords", content: "fine dining København, restaurant reservation, tasting menu, Nova restaurant, Nordic cuisine" },
-      { property: "og:title", content: "Nova — Reserve Your Evening" },
-      { property: "og:description", content: "Seasonal tasting menu, candlelit room, intentional luxury. Reserve your evening at Nova." },
+      { title: "Nova Restaurant and Bar — Reserve a Table in Asaba" },
+      { name: "description", content: "Reserve a table at Nova Restaurant and Bar on Okpanam Road, Asaba. Fine dining and drinks — open all day, book any time that suits you." },
+      { name: "keywords", content: "Nova Restaurant and Bar, Asaba restaurant, Okpanam Road, Delta State dining, restaurant reservation Asaba" },
+      { property: "og:title", content: "Nova Restaurant and Bar — Asaba" },
+      { property: "og:description", content: "Fine dining and drinks on Okpanam Road, Asaba. Reserve any time of day." },
       { property: "og:image", content: diningRoom },
       { property: "og:url", content: "/" },
       { name: "twitter:image", content: diningRoom },
@@ -38,8 +38,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const TIMES = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30"];
+const TIMES = [
+  "08:00", "09:00", "10:00", "11:00",
+  "12:00", "13:00", "14:00", "15:00",
+  "16:00", "17:00", "18:00", "19:00",
+  "20:00", "21:00", "22:00",
+];
 const PARTY = ["1", "2", "3", "4", "5", "6+"];
+
 
 type FoundReservation = {
   id: string;
@@ -63,7 +69,7 @@ function isPastTime(date: string, time: string) {
 const normalizePhone = (v: string) => String(v || "").replace(/\D/g, "");
 
 function Index() {
-  const [time, setTime] = useState("19:30");
+  const [time, setTime] = useState("13:00");
   const [party, setParty] = useState("2");
   const [form, setForm] = useState({
     guest_name: "",
@@ -176,11 +182,11 @@ function Index() {
               Nova
             </h1>
             <p className="max-w-[42ch] text-lg leading-relaxed text-ink/70 text-pretty">
-              An exploration of fire, flora and the fleeting seasons. We welcome you to our table
-              for an evening crafted with intention &mdash; <span className="italic" style={{ fontFamily: "var(--font-display)" }}>nothing rushed, nothing wasted.</span>
+              A calm room on Okpanam Road for lunch, drinks and long dinners.
+              We welcome you to our table — <span className="italic" style={{ fontFamily: "var(--font-display)" }}>any time of day.</span>
             </p>
             <a href="#reserve" className="mt-10 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-ink border-b border-current pb-1 hover:text-sienna transition-colors">
-              Reserve an Evening
+              Reserve a Table
               <span aria-hidden>→</span>
             </a>
           </section>
@@ -190,9 +196,10 @@ function Index() {
               <div className="max-w-2xl mx-auto">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold block mb-3">Reservation</span>
                 <h3 className="text-4xl mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                  Reserve Your <span className="italic text-burnt">Evening</span>
+                  Reserve Your <span className="italic text-burnt">Table</span>
                 </h3>
-                <p className="text-sm text-ink/60 mb-10 leading-relaxed">An intimate experience crafted for you.</p>
+                <p className="text-sm text-ink/60 mb-10 leading-relaxed">Breakfast, lunch, drinks or dinner — book any time of day.</p>
+
 
                 {confirmed ? (
                   <div className="border border-sienna/40 bg-sienna/5 p-8 space-y-4 animate-fade-in">
@@ -372,14 +379,15 @@ function Index() {
               Born from the <span className="italic text-burnt">embers</span>.
             </h3>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70 mb-6">
-              Nova began as a single hearth in a quiet courtyard. Four years on, we remain
-              devoted to that first idea &mdash; that fire, patiently tended, can render
-              the simplest ingredient into memory.
+              Nova opened its doors on Okpanam Road with a single idea &mdash; a warm,
+              considered room where Asaba could gather from morning coffee to a late
+              nightcap, without ever feeling rushed.
             </p>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70">
-              Our menu shifts with the season; our room holds twenty-four guests; our copper
-              pans hang from the same iron rack they did on opening night.
+              Our kitchen serves through the day; our bar keeps company into the night;
+              our tables are yours for as long as you'd like them.
             </p>
+
           </section>
 
           <footer className="bg-night text-paper p-10 lg:p-16">
@@ -387,10 +395,12 @@ function Index() {
               <div className="space-y-5">
                 <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
                 <p className="text-sm text-paper/60 leading-relaxed">
-                  Strandgade 93<br />
-                  1401 København, Denmark<br />
-                  Tue–Sat · 18:00 – 23:00
+                  84 Okpanam Road<br />
+                  Opp. Legislative Quarters, GRA<br />
+                  Asaba, Delta State, Nigeria<br />
+                  Open daily · 08:00 – 23:00
                 </p>
+
                 <p className="text-sm text-paper/60">
                   <a href="tel:+2349039986098" className="hover:text-sand transition-colors">+234 903 998 6098</a>
                 </p>
@@ -441,43 +451,44 @@ function ReviewsSlider() {
     return () => clearInterval(id);
   }, [emblaApi, reviews.length]);
 
-  if (!reviews.length) {
-    return (
-      <>
-        <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover opacity-90" />
-        <div className="absolute inset-0 bg-gradient-to-b from-night/40 via-night/30 to-night/80" />
-      </>
-    );
-  }
-
   return (
     <>
-      <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
-        <div className="flex h-full">
-          {reviews.map((r, i) => (
-            <ReviewSlide key={i} review={r} />
-          ))}
-        </div>
-      </div>
+      {/* Static background */}
+      <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
 
       <div className="absolute top-0 left-0 right-0 p-8 lg:p-10 flex items-center justify-between z-10">
         <span className="text-[10px] uppercase tracking-[0.4em] text-paper/70">Guest Reviews · Google</span>
-        <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
-          ★ {data.rating.toFixed(1)} · {data.userRatingCount}
-        </span>
+        {reviews.length > 0 && (
+          <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
+            ★ {data.rating.toFixed(1)} · {data.userRatingCount}
+          </span>
+        )}
       </div>
 
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
-        {reviews.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to review ${i + 1}`}
-            onClick={() => emblaApi?.scrollTo(i)}
-            className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
-          />
-        ))}
-      </div>
+      {reviews.length > 0 && (
+        <>
+          <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
+            <div className="flex h-full">
+              {reviews.map((r, i) => (
+                <ReviewSlide key={i} review={r} />
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+            {reviews.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Go to review ${i + 1}`}
+                onClick={() => emblaApi?.scrollTo(i)}
+                className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -485,8 +496,6 @@ function ReviewsSlider() {
 function ReviewSlide({ review }: { review: PlaceReview }) {
   return (
     <div className="relative flex-[0_0_100%] min-w-0 h-full">
-      <img src={diningRoom} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-      <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
       <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-16 text-center">
         <div className="flex gap-1 mb-6 text-sienna text-sm tracking-widest">
           {"★".repeat(Math.max(1, Math.min(5, review.rating)))}
@@ -515,3 +524,4 @@ function ReviewSlide({ review }: { review: PlaceReview }) {
     </div>
   );
 }
+
