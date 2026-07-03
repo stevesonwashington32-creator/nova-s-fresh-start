@@ -53,24 +53,31 @@ export const getPlaceReviews = createServerFn({ method: "GET" }).handler(async (
   };
 
   const now = Date.now();
-  const reviews: PlaceReview[] = (data.reviews ?? [])
-    .map((r) => ({
-      author: r.authorAttribution?.displayName ?? "Guest",
-      authorPhoto: r.authorAttribution?.photoUri ?? null,
-      rating: r.rating ?? 5,
-      text: (r.text?.text ?? r.originalText?.text ?? "").trim(),
-      relativeTime: r.relativePublishTimeDescription ?? "",
-      publishTime: r.publishTime ?? "",
-    }))
-    .filter((r) => {
-      if (!r.text) return false;
-      if (r.text.length > MAX_TEXT_LEN) return false;
-      if (!r.publishTime) return false;
-      const ts = Date.parse(r.publishTime);
-      if (Number.isNaN(ts)) return false;
-      return now - ts <= MAX_AGE_MS;
+  const all: PlaceReview[] = (data.reviews ?? [])
+    .map((r) => {
+      const raw = (r.text?.text ?? r.originalText?.text ?? "").trim();
+      const text = raw.length > MAX_TEXT_LEN ? raw.slice(0, MAX_TEXT_LEN - 1).trimEnd() + "…" : raw;
+      return {
+        author: r.authorAttribution?.displayName ?? "Guest",
+        authorPhoto: r.authorAttribution?.photoUri ?? null,
+        rating: r.rating ?? 5,
+        text,
+        relativeTime: r.relativePublishTimeDescription ?? "",
+        publishTime: r.publishTime ?? "",
+      };
     })
-    .slice(0, 8);
+    .filter((r) => r.text.length > 0);
+
+  const recent = all.filter((r) => {
+    if (!r.publishTime) return false;
+    const ts = Date.parse(r.publishTime);
+    if (Number.isNaN(ts)) return false;
+    return now - ts <= MAX_AGE_MS;
+  });
+
+  // Prefer recent reviews; fall back to all if the 5-month window is empty.
+  const reviews = (recent.length ? recent : all).slice(0, 8);
+
 
   return {
     rating: data.rating ?? 0,
