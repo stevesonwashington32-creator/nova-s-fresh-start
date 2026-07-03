@@ -182,11 +182,11 @@ function Index() {
               Nova
             </h1>
             <p className="max-w-[42ch] text-lg leading-relaxed text-ink/70 text-pretty">
-              An exploration of fire, flora and the fleeting seasons. We welcome you to our table
-              for an evening crafted with intention &mdash; <span className="italic" style={{ fontFamily: "var(--font-display)" }}>nothing rushed, nothing wasted.</span>
+              A calm room on Okpanam Road for lunch, drinks and long dinners.
+              We welcome you to our table — <span className="italic" style={{ fontFamily: "var(--font-display)" }}>any time of day.</span>
             </p>
             <a href="#reserve" className="mt-10 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-ink border-b border-current pb-1 hover:text-sienna transition-colors">
-              Reserve an Evening
+              Reserve a Table
               <span aria-hidden>→</span>
             </a>
           </section>
@@ -196,9 +196,10 @@ function Index() {
               <div className="max-w-2xl mx-auto">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold block mb-3">Reservation</span>
                 <h3 className="text-4xl mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                  Reserve Your <span className="italic text-burnt">Evening</span>
+                  Reserve Your <span className="italic text-burnt">Table</span>
                 </h3>
-                <p className="text-sm text-ink/60 mb-10 leading-relaxed">An intimate experience crafted for you.</p>
+                <p className="text-sm text-ink/60 mb-10 leading-relaxed">Breakfast, lunch, drinks or dinner — book any time of day.</p>
+
 
                 {confirmed ? (
                   <div className="border border-sienna/40 bg-sienna/5 p-8 space-y-4 animate-fade-in">
