@@ -466,7 +466,7 @@ function ReviewsSlider() {
         )}
       </div>
 
-      {reviews.length > 0 && (
+      {reviews.length > 0 ? (
         <>
           <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
             <div className="flex h-full">
@@ -476,18 +476,27 @@ function ReviewsSlider() {
             </div>
           </div>
 
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
-            {reviews.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Go to review ${i + 1}`}
-                onClick={() => emblaApi?.scrollTo(i)}
-                className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
-              />
-            ))}
-          </div>
+          {reviews.length > 1 && (
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+              {reviews.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Go to review ${i + 1}`}
+                  onClick={() => emblaApi?.scrollTo(i)}
+                  className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
+                />
+              ))}
+            </div>
+          )}
         </>
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center z-10">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-paper/60 mb-4">Guest Reviews</p>
+          <p className="text-paper/90 text-lg italic max-w-[32ch]" style={{ fontFamily: "var(--font-display)" }}>
+            No reviews found yet — be the first to share your evening with us.
+          </p>
+        </div>
       )}
     </>
   );
