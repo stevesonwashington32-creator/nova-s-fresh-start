@@ -394,10 +394,12 @@ function Index() {
               <div className="space-y-5">
                 <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
                 <p className="text-sm text-paper/60 leading-relaxed">
-                  Strandgade 93<br />
-                  1401 København, Denmark<br />
-                  Tue–Sat · 18:00 – 23:00
+                  84 Okpanam Road<br />
+                  Opp. Legislative Quarters, GRA<br />
+                  Asaba, Delta State, Nigeria<br />
+                  Open daily · 08:00 – 23:00
                 </p>
+
                 <p className="text-sm text-paper/60">
                   <a href="tel:+2349039986098" className="hover:text-sand transition-colors">+234 903 998 6098</a>
                 </p>
