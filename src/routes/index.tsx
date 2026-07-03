@@ -451,43 +451,44 @@ function ReviewsSlider() {
     return () => clearInterval(id);
   }, [emblaApi, reviews.length]);
 
-  if (!reviews.length) {
-    return (
-      <>
-        <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover opacity-90" />
-        <div className="absolute inset-0 bg-gradient-to-b from-night/40 via-night/30 to-night/80" />
-      </>
-    );
-  }
-
   return (
     <>
-      <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
-        <div className="flex h-full">
-          {reviews.map((r, i) => (
-            <ReviewSlide key={i} review={r} />
-          ))}
-        </div>
-      </div>
+      {/* Static background */}
+      <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
 
       <div className="absolute top-0 left-0 right-0 p-8 lg:p-10 flex items-center justify-between z-10">
         <span className="text-[10px] uppercase tracking-[0.4em] text-paper/70">Guest Reviews · Google</span>
-        <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
-          ★ {data.rating.toFixed(1)} · {data.userRatingCount}
-        </span>
+        {reviews.length > 0 && (
+          <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
+            ★ {data.rating.toFixed(1)} · {data.userRatingCount}
+          </span>
+        )}
       </div>
 
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
-        {reviews.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to review ${i + 1}`}
-            onClick={() => emblaApi?.scrollTo(i)}
-            className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
-          />
-        ))}
-      </div>
+      {reviews.length > 0 && (
+        <>
+          <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
+            <div className="flex h-full">
+              {reviews.map((r, i) => (
+                <ReviewSlide key={i} review={r} />
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+            {reviews.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Go to review ${i + 1}`}
+                onClick={() => emblaApi?.scrollTo(i)}
+                className={"h-[2px] transition-all " + (i === selected ? "w-8 bg-paper" : "w-4 bg-paper/30 hover:bg-paper/60")}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -495,8 +496,6 @@ function ReviewsSlider() {
 function ReviewSlide({ review }: { review: PlaceReview }) {
   return (
     <div className="relative flex-[0_0_100%] min-w-0 h-full">
-      <img src={diningRoom} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-      <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
       <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-16 text-center">
         <div className="flex gap-1 mb-6 text-sienna text-sm tracking-widest">
           {"★".repeat(Math.max(1, Math.min(5, review.rating)))}
@@ -525,3 +524,4 @@ function ReviewSlide({ review }: { review: PlaceReview }) {
     </div>
   );
 }
+
