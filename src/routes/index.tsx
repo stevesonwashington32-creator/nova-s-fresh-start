@@ -69,7 +69,7 @@ function isPastTime(date: string, time: string) {
 const normalizePhone = (v: string) => String(v || "").replace(/\D/g, "");
 
 function Index() {
-  const [time, setTime] = useState("19:30");
+  const [time, setTime] = useState("13:00");
   const [party, setParty] = useState("2");
   const [form, setForm] = useState({
     guest_name: "",
