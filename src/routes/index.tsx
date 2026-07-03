@@ -21,11 +21,11 @@ const reviewsQuery = queryOptions({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Nova — Reserve Your Evening | Fine Dining, København" },
-      { name: "description", content: "Reserve a table at Nova, an intimate fine dining restaurant in København. Seven-course seasonal tasting menu in a candlelit room. Est. 2022." },
-      { name: "keywords", content: "fine dining København, restaurant reservation, tasting menu, Nova restaurant, Nordic cuisine" },
-      { property: "og:title", content: "Nova — Reserve Your Evening" },
-      { property: "og:description", content: "Seasonal tasting menu, candlelit room, intentional luxury. Reserve your evening at Nova." },
+      { title: "Nova Restaurant and Bar — Reserve a Table in Asaba" },
+      { name: "description", content: "Reserve a table at Nova Restaurant and Bar on Okpanam Road, Asaba. Fine dining and drinks — open all day, book any time that suits you." },
+      { name: "keywords", content: "Nova Restaurant and Bar, Asaba restaurant, Okpanam Road, Delta State dining, restaurant reservation Asaba" },
+      { property: "og:title", content: "Nova Restaurant and Bar — Asaba" },
+      { property: "og:description", content: "Fine dining and drinks on Okpanam Road, Asaba. Reserve any time of day." },
       { property: "og:image", content: diningRoom },
       { property: "og:url", content: "/" },
       { name: "twitter:image", content: diningRoom },
@@ -38,8 +38,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const TIMES = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30"];
+const TIMES = [
+  "08:00", "09:00", "10:00", "11:00",
+  "12:00", "13:00", "14:00", "15:00",
+  "16:00", "17:00", "18:00", "19:00",
+  "20:00", "21:00", "22:00",
+];
 const PARTY = ["1", "2", "3", "4", "5", "6+"];
+
 
 type FoundReservation = {
   id: string;
