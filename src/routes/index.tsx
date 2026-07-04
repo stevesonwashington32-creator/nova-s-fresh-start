@@ -438,7 +438,7 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 function ReviewsSlider() {
-  const { data } = useSuspenseQuery(reviewsQuery);
+  const data = placeReviews;
   const reviews = data.reviews;
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 });
   const [selected, setSelected] = useState(0);
