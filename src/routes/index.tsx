@@ -253,21 +253,31 @@ function Index() {
 
                   <div>
                     <Label>Preferred Time</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {TIMES.map((t) => {
-                        const disabled = isToday && isPastTime(form.reservation_date, t);
-                        return (
-                          <button key={t} type="button" disabled={disabled}
-                            onClick={() => !disabled && setTime(t)}
-                            className={"px-4 py-2 text-xs uppercase tracking-wider transition-all border " +
-                              (disabled
-                                ? "opacity-30 cursor-not-allowed line-through"
-                                : time === t ? "bg-sienna text-paper border-sienna" : "text-ink/70 hover:border-sienna hover:text-sienna")}>
-                            {t}
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <Select value={time} onValueChange={setTime}>
+                      <SelectTrigger className="w-full h-11 border-0 border-b border-ink/20 rounded-none bg-transparent px-0 shadow-none focus:border-sienna focus:ring-0">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="h-4 w-4 text-ink/50" />
+                          <SelectValue placeholder="Choose a time" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-72">
+                        {TIME_GROUPS.map((group) => (
+                          <SelectGroup key={group.label}>
+                            <SelectLabel className="text-[10px] uppercase tracking-[0.25em] text-ink/40">
+                              {group.label}
+                            </SelectLabel>
+                            {group.times.map((t) => {
+                              const disabled = isToday && isPastTime(form.reservation_date, t);
+                              return (
+                                <SelectItem key={t} value={t} disabled={disabled}>
+                                  {formatTime(t)}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectGroup>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
