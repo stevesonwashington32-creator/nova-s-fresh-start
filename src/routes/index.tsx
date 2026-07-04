@@ -1,22 +1,25 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMutation, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { Clock } from "lucide-react";
 import diningRoom from "@/assets/dining-room.jpg";
 import {
   createReservation,
   findReservationsByPhone,
   cancelReservationByPhone,
 } from "@/lib/reservations.functions";
-import { getPlaceReviews, type PlaceReview } from "@/lib/reviews.functions";
-import { ThemeToggle } from "@/components/theme-toggle";
-
-const reviewsQuery = queryOptions({
-  queryKey: ["place-reviews"],
-  queryFn: () => getPlaceReviews(),
-  staleTime: 1000 * 60 * 30,
-});
+import { placeReviews, type PlaceReview } from "@/data/reviews";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,19 +35,22 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(reviewsQuery);
-  },
   component: Index,
 });
 
-const TIMES = [
-  "08:00", "09:00", "10:00", "11:00",
-  "12:00", "13:00", "14:00", "15:00",
-  "16:00", "17:00", "18:00", "19:00",
-  "20:00", "21:00", "22:00",
+const TIME_GROUPS: { label: string; times: string[] }[] = [
+  { label: "Morning", times: ["08:00", "09:00", "10:00", "11:00"] },
+  { label: "Afternoon", times: ["12:00", "13:00", "14:00", "15:00", "16:00"] },
+  { label: "Evening", times: ["17:00", "18:00", "19:00", "20:00", "21:00", "22:00"] },
 ];
 const PARTY = ["1", "2", "3", "4", "5", "6+"];
+
+function formatTime(t: string) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = ((h + 11) % 12) + 1;
+  return `${h12}:${m.toString().padStart(2, "0")} ${period}`;
+}
 
 
 type FoundReservation = {
