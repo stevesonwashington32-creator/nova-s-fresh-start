@@ -1,22 +1,25 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMutation, useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { Clock } from "lucide-react";
 import diningRoom from "@/assets/dining-room.jpg";
 import {
   createReservation,
   findReservationsByPhone,
   cancelReservationByPhone,
 } from "@/lib/reservations.functions";
-import { getPlaceReviews, type PlaceReview } from "@/lib/reviews.functions";
-import { ThemeToggle } from "@/components/theme-toggle";
-
-const reviewsQuery = queryOptions({
-  queryKey: ["place-reviews"],
-  queryFn: () => getPlaceReviews(),
-  staleTime: 1000 * 60 * 30,
-});
+import { placeReviews, type PlaceReview } from "@/data/reviews";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,19 +35,22 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(reviewsQuery);
-  },
   component: Index,
 });
 
-const TIMES = [
-  "08:00", "09:00", "10:00", "11:00",
-  "12:00", "13:00", "14:00", "15:00",
-  "16:00", "17:00", "18:00", "19:00",
-  "20:00", "21:00", "22:00",
+const TIME_GROUPS: { label: string; times: string[] }[] = [
+  { label: "Morning", times: ["08:00", "09:00", "10:00", "11:00"] },
+  { label: "Afternoon", times: ["12:00", "13:00", "14:00", "15:00", "16:00"] },
+  { label: "Evening", times: ["17:00", "18:00", "19:00", "20:00", "21:00", "22:00"] },
 ];
 const PARTY = ["1", "2", "3", "4", "5", "6+"];
+
+function formatTime(t: string) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = ((h + 11) % 12) + 1;
+  return `${h12}:${m.toString().padStart(2, "0")} ${period}`;
+}
 
 
 type FoundReservation = {
@@ -162,10 +168,7 @@ function Index() {
         <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.25em] font-medium items-center">
           <a href="#story" className="hover:text-sand transition-colors">Our Story</a>
           <a href="#reserve" className="hover:text-sand transition-colors">Reservations</a>
-          <Link to="/auth" className="hover:text-sand transition-colors">Staff</Link>
-          <ThemeToggle />
         </div>
-        <div className="md:hidden"><ThemeToggle /></div>
       </nav>
 
       <main className="grid lg:grid-cols-2 min-h-screen">
@@ -250,21 +253,31 @@ function Index() {
 
                   <div>
                     <Label>Preferred Time</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {TIMES.map((t) => {
-                        const disabled = isToday && isPastTime(form.reservation_date, t);
-                        return (
-                          <button key={t} type="button" disabled={disabled}
-                            onClick={() => !disabled && setTime(t)}
-                            className={"px-4 py-2 text-xs uppercase tracking-wider transition-all border " +
-                              (disabled
-                                ? "opacity-30 cursor-not-allowed line-through"
-                                : time === t ? "bg-sienna text-paper border-sienna" : "text-ink/70 hover:border-sienna hover:text-sienna")}>
-                            {t}
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <Select value={time} onValueChange={setTime}>
+                      <SelectTrigger className="w-full h-11 border-0 border-b border-ink/20 rounded-none bg-transparent px-0 shadow-none focus:border-sienna focus:ring-0">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="h-4 w-4 text-ink/50" />
+                          <SelectValue placeholder="Choose a time" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-72">
+                        {TIME_GROUPS.map((group) => (
+                          <SelectGroup key={group.label}>
+                            <SelectLabel className="text-[10px] uppercase tracking-[0.25em] text-ink/40">
+                              {group.label}
+                            </SelectLabel>
+                            {group.times.map((t) => {
+                              const disabled = isToday && isPastTime(form.reservation_date, t);
+                              return (
+                                <SelectItem key={t} value={t} disabled={disabled}>
+                                  {formatTime(t)}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectGroup>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
@@ -405,14 +418,7 @@ function Index() {
                   <a href="tel:+2349039986098" className="hover:text-sand transition-colors">+234 903 998 6098</a>
                 </p>
               </div>
-              <div className="flex flex-col lg:items-end justify-between gap-6">
-                <div className="lg:text-right">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-paper/40 mb-3">Letters from Nova</p>
-                  <div className="flex border-b border-paper/20 w-full lg:w-72">
-                    <input type="email" placeholder="Email address" className="bg-transparent py-2 text-xs outline-none w-full placeholder:text-paper/30" />
-                    <button className="text-[10px] uppercase tracking-widest font-medium hover:text-sand transition-colors">Join</button>
-                  </div>
-                </div>
+              <div className="flex lg:items-end justify-end">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-paper/30">© 2026 Nova</p>
               </div>
             </div>
@@ -432,7 +438,7 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 function ReviewsSlider() {
-  const { data } = useSuspenseQuery(reviewsQuery);
+  const data = placeReviews;
   const reviews = data.reviews;
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 });
   const [selected, setSelected] = useState(0);
