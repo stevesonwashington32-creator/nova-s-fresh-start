@@ -1,0 +1,46 @@
+{
+  "rating": 4.3,
+  "userRatingCount": 119,
+  "reviews": [
+    {
+      "author": "Henry Ezeani",
+      "authorPhoto": "https://lh3.googleusercontent.com/a-/ALV-UjURKHuyol23KfXeVfinSrFswe1hOlCRUSMZhRpT6fkM8aZMt-6p=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "text": "Nova have a style(making your food fresh) and it is lovely. No one does it better than nova",
+      "relativeTime": "5 months ago",
+      "publishTime": "2026-01-16T11:53:49.488802013Z"
+    },
+    {
+      "author": "Ellie",
+      "authorPhoto": "https://lh3.googleusercontent.com/a/ACg8ocLLw4EUGeXB7t709hIffkiLbGhWvKuEDzpyd72baRusWy2tikM=s128-c0x00000000-cc-rp-mo-ba3",
+      "rating": 5,
+      "text": "The ambiance and the food here are really great. I traveled from Austria and was very excited to visit a restaurant that offers tasty, not overly spicy, and international dishes, and the food truly did not disappoint😍. Everything we order…",
+      "relativeTime": "6 months ago",
+      "publishTime": "2026-01-03T19:12:35.681424344Z"
+    },
+    {
+      "author": "Gbenebichie Christiana",
+      "authorPhoto": "https://lh3.googleusercontent.com/a-/ALV-UjV9pG8lamerXcorrubUI2f4VulGAWegH_37cdume-hg6n0amqVT=s128-c0x00000000-cc-rp-mo-ba3",
+      "rating": 4,
+      "text": "The entire experience was beautiful. The Food was amazing. Especially their pineapple fried rice, their proteins are very nice. The customer service is very nice. Especially a waiter, Rachel, she was calm patient and smiled alot.",
+      "relativeTime": "2 years ago",
+      "publishTime": "2024-04-17T07:49:04.741911Z"
+    },
+    {
+      "author": "Lollipops",
+      "authorPhoto": "https://lh3.googleusercontent.com/a-/ALV-UjXRBk0TfxyDl8Y2r7ndjAAKu42FQ_7KQbcFIFwVUVLo7d_mZUk=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "text": "You know how you go to a place, and right at the moment, you know THIS IS IT? This was it and more! The food was really delicious, well spiced and cooked. The environment was cozy and elegant. The Pina Colada must be ordered!",
+      "relativeTime": "2 years ago",
+      "publishTime": "2024-05-01T18:26:35.207431Z"
+    },
+    {
+      "author": "Osasumwen Osifo",
+      "authorPhoto": "https://lh3.googleusercontent.com/a/ACg8ocJ4i-TV8656A8CyarL1A36qXekCcDhnYc_AORm_BjOM4h5zlg=s128-c0x00000000-cc-rp-mo",
+      "rating": 4,
+      "text": "Food was great, probably the best restaurant we tried during our trip to Nigeria. Price point per portion was okay. We loved this place so much. Staff were so nice and helpful.",
+      "relativeTime": "2 years ago",
+      "publishTime": "2023-08-26T16:35:45.073557Z"
+    }
+  ]
+}
