@@ -418,14 +418,7 @@ function Index() {
                   <a href="tel:+2349039986098" className="hover:text-sand transition-colors">+234 903 998 6098</a>
                 </p>
               </div>
-              <div className="flex flex-col lg:items-end justify-between gap-6">
-                <div className="lg:text-right">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-paper/40 mb-3">Letters from Nova</p>
-                  <div className="flex border-b border-paper/20 w-full lg:w-72">
-                    <input type="email" placeholder="Email address" className="bg-transparent py-2 text-xs outline-none w-full placeholder:text-paper/30" />
-                    <button className="text-[10px] uppercase tracking-widest font-medium hover:text-sand transition-colors">Join</button>
-                  </div>
-                </div>
+              <div className="flex lg:items-end justify-end">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-paper/30">© 2026 Nova</p>
               </div>
             </div>
