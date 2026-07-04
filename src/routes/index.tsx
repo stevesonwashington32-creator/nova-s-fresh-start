@@ -168,10 +168,7 @@ function Index() {
         <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.25em] font-medium items-center">
           <a href="#story" className="hover:text-sand transition-colors">Our Story</a>
           <a href="#reserve" className="hover:text-sand transition-colors">Reservations</a>
-          <Link to="/auth" className="hover:text-sand transition-colors">Staff</Link>
-          <ThemeToggle />
         </div>
-        <div className="md:hidden"><ThemeToggle /></div>
       </nav>
 
       <main className="grid lg:grid-cols-2 min-h-screen">
