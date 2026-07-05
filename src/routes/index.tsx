@@ -86,7 +86,16 @@ function Index() {
   });
   const [agreeLate, setAgreeLate] = useState(false);
   const [formError, setFormError] = useState("");
-  const [confirmed, setConfirmed] = useState<string | null>(null);
+  const [confirmed, setConfirmed] = useState<null | {
+    ref: string;
+    guest_name: string;
+    phone: string;
+    occasion: string;
+    party: string;
+    reservation_date: string;
+    reservation_time: string;
+  }>(null);
+
 
   // Find/cancel state
   const [lookupPhone, setLookupPhone] = useState("");
@@ -111,9 +120,18 @@ function Index() {
       },
     }),
     onSuccess: (r) => {
-      setConfirmed(r.ref);
+      setConfirmed({
+        ref: r.ref,
+        guest_name: form.guest_name,
+        phone: form.phone,
+        occasion: form.occasion || "—",
+        party,
+        reservation_date: form.reservation_date,
+        reservation_time: time,
+      });
       setFormError("");
     },
+
   });
 
   const findMut = useMutation({
@@ -205,16 +223,29 @@ function Index() {
 
 
                 {confirmed ? (
-                  <div className="border border-sienna/40 bg-sienna/5 p-8 space-y-4 animate-fade-in">
+                  <div className="border border-sienna/40 bg-sienna/5 p-8 space-y-5 animate-fade-in">
                     <p className="text-[10px] uppercase tracking-[0.35em] text-sienna">Reservation Received</p>
-                    <h4 className="text-3xl italic" style={{ fontFamily: "var(--font-display)" }}>Thank you.</h4>
+                    <h4 className="text-3xl italic" style={{ fontFamily: "var(--font-display)" }}>Thank you, {confirmed.guest_name.split(" ")[0]}.</h4>
                     <p className="text-sm text-ink/70 leading-relaxed">
-                      Your evening is held under reference <span className="text-sienna font-medium">{confirmed}</span>.
-                      Our reception will call to confirm shortly.
+                      Your table is held. Our reception will call to confirm shortly.
                     </p>
+
+                    <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm border-t border-sienna/20 pt-5">
+                      <ConfRow k="Reference" v={<span className="text-sienna font-medium tracking-widest">{confirmed.ref}</span>} />
+                      <ConfRow k="Name" v={confirmed.guest_name} />
+                      <ConfRow k="Phone" v={confirmed.phone} />
+                      <ConfRow k="Party" v={`${confirmed.party} ${confirmed.party === "1" ? "guest" : "guests"}`} />
+                      <ConfRow k="Date" v={new Date(confirmed.reservation_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })} />
+                      <ConfRow k="Time" v={formatTime(confirmed.reservation_time)} />
+                      <div className="col-span-2">
+                        <ConfRow k="Occasion" v={confirmed.occasion} />
+                      </div>
+                    </dl>
+
                     <button onClick={() => setConfirmed(null)} className="text-[10px] uppercase tracking-[0.3em] border-b border-ink pb-1 hover:text-sienna hover:border-sienna">
                       Make another reservation
                     </button>
+
                   </div>
                 ) : (
                 <form className="space-y-7" onSubmit={handleSubmit}>
@@ -436,6 +467,16 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Label({ children }: { children: React.ReactNode }) {
   return <label className="text-[10px] uppercase tracking-[0.25em] text-ink/50 block mb-3">{children}</label>;
 }
+
+function ConfRow({ k, v }: { k: string; v: React.ReactNode }) {
+  return (
+    <div>
+      <dt className="text-[10px] uppercase tracking-[0.25em] text-ink/40">{k}</dt>
+      <dd className="text-ink mt-1">{v}</dd>
+    </div>
+  );
+}
+
 
 function ReviewsSlider() {
   const data = placeReviews;
