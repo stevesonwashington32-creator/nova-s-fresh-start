@@ -86,7 +86,16 @@ function Index() {
   });
   const [agreeLate, setAgreeLate] = useState(false);
   const [formError, setFormError] = useState("");
-  const [confirmed, setConfirmed] = useState<string | null>(null);
+  const [confirmed, setConfirmed] = useState<null | {
+    ref: string;
+    guest_name: string;
+    phone: string;
+    occasion: string;
+    party: string;
+    reservation_date: string;
+    reservation_time: string;
+  }>(null);
+
 
   // Find/cancel state
   const [lookupPhone, setLookupPhone] = useState("");
