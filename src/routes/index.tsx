@@ -120,9 +120,18 @@ function Index() {
       },
     }),
     onSuccess: (r) => {
-      setConfirmed(r.ref);
+      setConfirmed({
+        ref: r.ref,
+        guest_name: form.guest_name,
+        phone: form.phone,
+        occasion: form.occasion || "—",
+        party,
+        reservation_date: form.reservation_date,
+        reservation_time: time,
+      });
       setFormError("");
     },
+
   });
 
   const findMut = useMutation({
