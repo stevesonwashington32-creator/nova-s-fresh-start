@@ -468,6 +468,16 @@ function Label({ children }: { children: React.ReactNode }) {
   return <label className="text-[10px] uppercase tracking-[0.25em] text-ink/50 block mb-3">{children}</label>;
 }
 
+function ConfRow({ k, v }: { k: string; v: React.ReactNode }) {
+  return (
+    <div>
+      <dt className="text-[10px] uppercase tracking-[0.25em] text-ink/40">{k}</dt>
+      <dd className="text-ink mt-1">{v}</dd>
+    </div>
+  );
+}
+
+
 function ReviewsSlider() {
   const data = placeReviews;
   const reviews = data.reviews;
