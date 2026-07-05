@@ -27,6 +27,7 @@ export type Database = {
           reservation_time: string
           special_requests: string | null
           status: string
+          table_id: string | null
           updated_at: string
         }
         Insert: {
@@ -41,6 +42,7 @@ export type Database = {
           reservation_time: string
           special_requests?: string | null
           status?: string
+          table_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -55,7 +57,37 @@ export type Database = {
           reservation_time?: string
           special_requests?: string | null
           status?: string
+          table_id?: string | null
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_tables: {
+        Row: {
+          capacity: number
+          created_at: string
+          id: string
+          number: number
+        }
+        Insert: {
+          capacity: number
+          created_at?: string
+          id?: string
+          number: number
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          id?: string
+          number?: number
         }
         Relationships: []
       }
@@ -85,6 +117,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_cancel_stale_reservations: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
