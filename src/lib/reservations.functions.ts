@@ -162,3 +162,32 @@ export const getMyRole = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return { roles: (data ?? []).map((r) => r.role) as string[] };
   });
+
+export const listRestaurantTables = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("restaurant_tables")
+      .select("id, number, capacity")
+      .order("number", { ascending: true });
+    if (error) throw new Error(error.message);
+    return { tables: data ?? [] };
+  });
+
+export const assignReservationTable = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      id: z.string().uuid(),
+      table_id: z.string().uuid().nullable(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("reservations")
+      .update({ table_id: data.table_id })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
