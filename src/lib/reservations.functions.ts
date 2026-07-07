@@ -174,6 +174,32 @@ export const listRestaurantTables = createServerFn({ method: "GET" })
     return { tables: data ?? [] };
   });
 
+export const getAppSettings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("app_settings")
+      .select("reservation_grace_minutes")
+      .eq("id", true)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return { reservation_grace_minutes: data?.reservation_grace_minutes ?? 45 };
+  });
+
+export const updateGracePeriod = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ reservation_grace_minutes: z.number().int().min(0).max(720) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("app_settings")
+      .update({ reservation_grace_minutes: data.reservation_grace_minutes })
+      .eq("id", true);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export const assignReservationTable = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
