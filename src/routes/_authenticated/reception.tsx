@@ -521,8 +521,7 @@ function ReservationRow({
 
 function GraceSettings({ value, pending, onSave }: { value: number; pending: boolean; onSave: (m: number) => void }) {
   const [draft, setDraft] = useState<string>(String(value));
-  // keep in sync when value loads
-  useMemoSync(value, setDraft);
+  useEffect(() => { setDraft(String(value)); }, [value]);
   const parsed = Math.max(0, Math.min(720, parseInt(draft) || 0));
   const dirty = parsed !== value;
   return (
@@ -551,11 +550,6 @@ function GraceSettings({ value, pending, onSave }: { value: number; pending: boo
       </div>
     </div>
   );
-}
-
-function useMemoSync(value: number, setDraft: (s: string) => void) {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useMemo(() => { setDraft(String(value)); return null; }, [value]);
 }
 
 function ActBtn({ children, title, onClick, danger }: { children: React.ReactNode; title: string; onClick: () => void; danger?: boolean }) {
