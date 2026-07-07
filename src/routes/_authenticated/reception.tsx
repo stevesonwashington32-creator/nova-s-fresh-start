@@ -254,8 +254,16 @@ function ReceptionPage() {
   return (
     <div className="min-h-screen bg-night text-paper" style={{ fontFamily: "var(--font-body)" }}>
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-paper/5 border border-sand px-5 py-3 text-xs text-paper tracking-wider animate-fade-in">
-          {toast}
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-night/95 border border-sand px-5 py-3 text-xs text-paper tracking-wider animate-fade-in shadow-lg">
+          <span>{toast.msg}</span>
+          {toast.undo && (
+            <button
+              onClick={() => { toast.undo?.(); setToast(null); }}
+              className="uppercase tracking-[0.2em] text-sand hover:text-paper border-l border-paper/20 pl-3"
+            >
+              Undo
+            </button>
+          )}
         </div>
       )}
 
