@@ -519,6 +519,45 @@ function ReservationRow({
   );
 }
 
+function GraceSettings({ value, pending, onSave }: { value: number; pending: boolean; onSave: (m: number) => void }) {
+  const [draft, setDraft] = useState<string>(String(value));
+  // keep in sync when value loads
+  useMemoSync(value, setDraft);
+  const parsed = Math.max(0, Math.min(720, parseInt(draft) || 0));
+  const dirty = parsed !== value;
+  return (
+    <div className="border border-paper/10 bg-paper/[0.02] p-6 flex flex-wrap items-end gap-4">
+      <div className="flex-1 min-w-[220px]">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-paper/40 mb-2">Auto-cancel grace period</p>
+        <p className="text-paper/70 text-xs">
+          Pending, confirmed, or late reservations are automatically cancelled this many minutes after their scheduled time.
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="number" min={0} max={720}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          className="w-24 bg-paper/[0.03] border border-paper/10 px-3 py-2 text-sm focus:border-sand outline-none"
+        />
+        <span className="text-paper/50 text-xs">min</span>
+        <button
+          disabled={!dirty || pending}
+          onClick={() => onSave(parsed)}
+          className="border border-sand text-sand px-4 py-2 text-[11px] uppercase tracking-widest hover:bg-sand/10 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {pending ? "Saving…" : "Save"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function useMemoSync(value: number, setDraft: (s: string) => void) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useMemo(() => { setDraft(String(value)); return null; }, [value]);
+}
+
 function ActBtn({ children, title, onClick, danger }: { children: React.ReactNode; title: string; onClick: () => void; danger?: boolean }) {
   return (
     <button
