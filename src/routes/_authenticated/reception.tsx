@@ -483,10 +483,10 @@ function ReservationRow({
                 {r.status === "pending" && (
                   <DropdownMenuItem onClick={() => onStatus("confirmed")}>Confirm</DropdownMenuItem>
                 )}
-                {(r.status === "confirmed" || r.status === "late") && (
+                {(r.status === "pending" || r.status === "confirmed" || r.status === "late") && (
                   <DropdownMenuItem onClick={() => onStatus("arrived")}>Mark arrived</DropdownMenuItem>
                 )}
-                {r.status === "confirmed" && (
+                {(r.status === "pending" || r.status === "confirmed") && (
                   <DropdownMenuItem onClick={() => onStatus("late")}>Mark late</DropdownMenuItem>
                 )}
                 {r.status === "arrived" && (
