@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          id: boolean
+          reservation_grace_minutes: number
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          reservation_grace_minutes?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          reservation_grace_minutes?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reservations: {
         Row: {
           created_at: string

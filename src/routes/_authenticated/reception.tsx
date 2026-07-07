@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   listReservations,
@@ -11,6 +11,8 @@ import {
   getMyRole,
   listRestaurantTables,
   assignReservationTable,
+  getAppSettings,
+  updateGracePeriod,
 } from "@/lib/reservations.functions";
 import {
   Users, Trash2, Check, Clock, CalendarClock, Utensils, X, MoreVertical,
@@ -77,6 +79,8 @@ function ReceptionPage() {
   const del = useServerFn(deleteReservation);
   const listTables = useServerFn(listRestaurantTables);
   const assignTable = useServerFn(assignReservationTable);
+  const getSettings = useServerFn(getAppSettings);
+  const setGrace = useServerFn(updateGracePeriod);
 
   const roleQ = useQuery({ queryKey: ["my-role"], queryFn: () => role() });
   const isStaff = (roleQ.data?.roles ?? []).some((r) => r === "staff" || r === "admin");
@@ -92,11 +96,16 @@ function ReceptionPage() {
     queryFn: () => listTables(),
     enabled: isStaff,
   });
+  const settingsQ = useQuery({
+    queryKey: ["app-settings"],
+    queryFn: () => getSettings(),
+    enabled: isStaff,
+  });
 
-  const [toast, setToast] = useState("");
-  const showToast = (m: string) => {
-    setToast(m);
-    setTimeout(() => setToast(""), 2500);
+  const [toast, setToast] = useState<{ msg: string; undo?: () => void } | null>(null);
+  const showToast = (msg: string, undo?: () => void) => {
+    setToast({ msg, undo });
+    setTimeout(() => setToast((t) => (t && t.msg === msg ? null : t)), 5000);
   };
 
   const mut = useMutation({
@@ -124,10 +133,32 @@ function ReceptionPage() {
     onError: (e: Error) => showToast(e.message),
   });
   const assignMut = useMutation({
-    mutationFn: (vars: { id: string; table_id: string | null }) => assignTable({ data: vars }),
-    onSuccess: () => {
+    mutationFn: (vars: { id: string; table_id: string | null; previous: string | null; tableLabel: string; isUndo?: boolean }) =>
+      assignTable({ data: { id: vars.id, table_id: vars.table_id } }).then(() => vars),
+    onSuccess: (vars) => {
       qc.invalidateQueries({ queryKey: ["reservations"] });
-      showToast("Table assigned");
+      if (vars.isUndo) {
+        showToast("Assignment reverted");
+      } else {
+        showToast(
+          vars.table_id ? `Assigned ${vars.tableLabel}` : "Table cleared",
+          () => assignMut.mutate({
+            id: vars.id,
+            table_id: vars.previous,
+            previous: vars.table_id,
+            tableLabel: "previous table",
+            isUndo: true,
+          }),
+        );
+      }
+    },
+    onError: (e: Error) => showToast(e.message),
+  });
+  const graceMut = useMutation({
+    mutationFn: (minutes: number) => setGrace({ data: { reservation_grace_minutes: minutes } }),
+    onSuccess: (_d, minutes) => {
+      qc.invalidateQueries({ queryKey: ["app-settings"] });
+      showToast(`Grace period → ${minutes} min`);
     },
     onError: (e: Error) => showToast(e.message),
   });
@@ -223,8 +254,16 @@ function ReceptionPage() {
   return (
     <div className="min-h-screen bg-night text-paper" style={{ fontFamily: "var(--font-body)" }}>
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-paper/5 border border-sand px-5 py-3 text-xs text-paper tracking-wider animate-fade-in">
-          {toast}
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-night/95 border border-sand px-5 py-3 text-xs text-paper tracking-wider animate-fade-in shadow-lg">
+          <span>{toast.msg}</span>
+          {toast.undo && (
+            <button
+              onClick={() => { toast.undo?.(); setToast(null); }}
+              className="uppercase tracking-[0.2em] text-sand hover:text-paper border-l border-paper/20 pl-3"
+            >
+              Undo
+            </button>
+          )}
         </div>
       )}
 
@@ -261,6 +300,14 @@ function ReceptionPage() {
           <p className="text-7xl lg:text-8xl" style={{ fontFamily: "var(--font-display)" }}>{stats.total}</p>
           <p className="text-sand/70 text-xs uppercase tracking-[0.25em] mt-3">All time</p>
         </div>
+
+        <GraceSettings
+          value={settingsQ.data?.reservation_grace_minutes ?? 45}
+          pending={graceMut.isPending}
+          onSave={(m) => graceMut.mutate(m)}
+        />
+
+
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard label="Today" big={stats.today} sub="Reservations today" />
@@ -310,7 +357,15 @@ function ReceptionPage() {
                 occupiedTableIds={occupiedTableIds}
                 partySize={parseInt(r.party_size) || 1}
                 onStatus={(status) => mut.mutate({ id: r.id, status })}
-                onAssign={(table_id) => assignMut.mutate({ id: r.id, table_id })}
+                onAssign={(table_id) => {
+                  const t = tables.find((x) => x.id === table_id);
+                  assignMut.mutate({
+                    id: r.id,
+                    table_id,
+                    previous: r.table_id,
+                    tableLabel: t ? `Table ${t.number}` : "table",
+                  });
+                }}
                 onReschedule={() => handleReschedule(r)}
                 onDelete={() => { if (confirm("Delete this reservation?")) delMut.mutate(r.id); }}
               />
@@ -398,10 +453,10 @@ function ReservationRow({
             {r.status === "pending" && (
               <ActBtn title="Confirm" onClick={() => onStatus("confirmed")}><Check className="h-3.5 w-3.5" /></ActBtn>
             )}
-            {(r.status === "confirmed" || r.status === "late") && (
+            {(r.status === "pending" || r.status === "confirmed" || r.status === "late") && (
               <ActBtn title="Mark arrived" onClick={() => onStatus("arrived")}><Utensils className="h-3.5 w-3.5" /></ActBtn>
             )}
-            {r.status === "confirmed" && (
+            {(r.status === "pending" || r.status === "confirmed") && (
               <ActBtn title="Mark late" onClick={() => onStatus("late")}><Clock className="h-3.5 w-3.5" /></ActBtn>
             )}
             {r.status === "arrived" && (
@@ -428,10 +483,10 @@ function ReservationRow({
                 {r.status === "pending" && (
                   <DropdownMenuItem onClick={() => onStatus("confirmed")}>Confirm</DropdownMenuItem>
                 )}
-                {(r.status === "confirmed" || r.status === "late") && (
+                {(r.status === "pending" || r.status === "confirmed" || r.status === "late") && (
                   <DropdownMenuItem onClick={() => onStatus("arrived")}>Mark arrived</DropdownMenuItem>
                 )}
-                {r.status === "confirmed" && (
+                {(r.status === "pending" || r.status === "confirmed") && (
                   <DropdownMenuItem onClick={() => onStatus("late")}>Mark late</DropdownMenuItem>
                 )}
                 {r.status === "arrived" && (
@@ -461,6 +516,39 @@ function ReservationRow({
         </div>
       </div>
     </li>
+  );
+}
+
+function GraceSettings({ value, pending, onSave }: { value: number; pending: boolean; onSave: (m: number) => void }) {
+  const [draft, setDraft] = useState<string>(String(value));
+  useEffect(() => { setDraft(String(value)); }, [value]);
+  const parsed = Math.max(0, Math.min(720, parseInt(draft) || 0));
+  const dirty = parsed !== value;
+  return (
+    <div className="border border-paper/10 bg-paper/[0.02] p-6 flex flex-wrap items-end gap-4">
+      <div className="flex-1 min-w-[220px]">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-paper/40 mb-2">Auto-cancel grace period</p>
+        <p className="text-paper/70 text-xs">
+          Pending, confirmed, or late reservations are automatically cancelled this many minutes after their scheduled time.
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="number" min={0} max={720}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          className="w-24 bg-paper/[0.03] border border-paper/10 px-3 py-2 text-sm focus:border-sand outline-none"
+        />
+        <span className="text-paper/50 text-xs">min</span>
+        <button
+          disabled={!dirty || pending}
+          onClick={() => onSave(parsed)}
+          className="border border-sand text-sand px-4 py-2 text-[11px] uppercase tracking-widest hover:bg-sand/10 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {pending ? "Saving…" : "Save"}
+        </button>
+      </div>
+    </div>
   );
 }
 
