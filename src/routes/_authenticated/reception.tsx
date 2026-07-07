@@ -11,6 +11,8 @@ import {
   getMyRole,
   listRestaurantTables,
   assignReservationTable,
+  getAppSettings,
+  updateGracePeriod,
 } from "@/lib/reservations.functions";
 import {
   Users, Trash2, Check, Clock, CalendarClock, Utensils, X, MoreVertical,
