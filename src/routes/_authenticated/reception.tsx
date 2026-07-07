@@ -133,10 +133,32 @@ function ReceptionPage() {
     onError: (e: Error) => showToast(e.message),
   });
   const assignMut = useMutation({
-    mutationFn: (vars: { id: string; table_id: string | null }) => assignTable({ data: vars }),
-    onSuccess: () => {
+    mutationFn: (vars: { id: string; table_id: string | null; previous: string | null; tableLabel: string; isUndo?: boolean }) =>
+      assignTable({ data: { id: vars.id, table_id: vars.table_id } }).then(() => vars),
+    onSuccess: (vars) => {
       qc.invalidateQueries({ queryKey: ["reservations"] });
-      showToast("Table assigned");
+      if (vars.isUndo) {
+        showToast("Assignment reverted");
+      } else {
+        showToast(
+          vars.table_id ? `Assigned ${vars.tableLabel}` : "Table cleared",
+          () => assignMut.mutate({
+            id: vars.id,
+            table_id: vars.previous,
+            previous: vars.table_id,
+            tableLabel: "previous table",
+            isUndo: true,
+          }),
+        );
+      }
+    },
+    onError: (e: Error) => showToast(e.message),
+  });
+  const graceMut = useMutation({
+    mutationFn: (minutes: number) => setGrace({ data: { reservation_grace_minutes: minutes } }),
+    onSuccess: (_d, minutes) => {
+      qc.invalidateQueries({ queryKey: ["app-settings"] });
+      showToast(`Grace period → ${minutes} min`);
     },
     onError: (e: Error) => showToast(e.message),
   });
