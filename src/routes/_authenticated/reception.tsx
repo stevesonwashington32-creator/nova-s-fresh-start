@@ -349,7 +349,15 @@ function ReceptionPage() {
                 occupiedTableIds={occupiedTableIds}
                 partySize={parseInt(r.party_size) || 1}
                 onStatus={(status) => mut.mutate({ id: r.id, status })}
-                onAssign={(table_id) => assignMut.mutate({ id: r.id, table_id })}
+                onAssign={(table_id) => {
+                  const t = tables.find((x) => x.id === table_id);
+                  assignMut.mutate({
+                    id: r.id,
+                    table_id,
+                    previous: r.table_id,
+                    tableLabel: t ? `Table ${t.number}` : "table",
+                  });
+                }}
                 onReschedule={() => handleReschedule(r)}
                 onDelete={() => { if (confirm("Delete this reservation?")) delMut.mutate(r.id); }}
               />
