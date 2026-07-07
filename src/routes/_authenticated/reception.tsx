@@ -301,6 +301,14 @@ function ReceptionPage() {
           <p className="text-sand/70 text-xs uppercase tracking-[0.25em] mt-3">All time</p>
         </div>
 
+        <GraceSettings
+          value={settingsQ.data?.reservation_grace_minutes ?? 45}
+          pending={graceMut.isPending}
+          onSave={(m) => graceMut.mutate(m)}
+        />
+
+
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard label="Today" big={stats.today} sub="Reservations today" />
           <StatCard label="Guests Expected" big={stats.covers} sub="Today's covers" />
