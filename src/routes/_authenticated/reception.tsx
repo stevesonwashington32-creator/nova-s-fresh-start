@@ -79,6 +79,8 @@ function ReceptionPage() {
   const del = useServerFn(deleteReservation);
   const listTables = useServerFn(listRestaurantTables);
   const assignTable = useServerFn(assignReservationTable);
+  const getSettings = useServerFn(getAppSettings);
+  const setGrace = useServerFn(updateGracePeriod);
 
   const roleQ = useQuery({ queryKey: ["my-role"], queryFn: () => role() });
   const isStaff = (roleQ.data?.roles ?? []).some((r) => r === "staff" || r === "admin");
@@ -94,11 +96,16 @@ function ReceptionPage() {
     queryFn: () => listTables(),
     enabled: isStaff,
   });
+  const settingsQ = useQuery({
+    queryKey: ["app-settings"],
+    queryFn: () => getSettings(),
+    enabled: isStaff,
+  });
 
-  const [toast, setToast] = useState("");
-  const showToast = (m: string) => {
-    setToast(m);
-    setTimeout(() => setToast(""), 2500);
+  const [toast, setToast] = useState<{ msg: string; undo?: () => void } | null>(null);
+  const showToast = (msg: string, undo?: () => void) => {
+    setToast({ msg, undo });
+    setTimeout(() => setToast((t) => (t && t.msg === msg ? null : t)), 5000);
   };
 
   const mut = useMutation({
