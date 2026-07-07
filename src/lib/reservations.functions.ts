@@ -32,9 +32,9 @@ function publicClient() {
 export const createReservation = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => ReservationInput.parse(d))
   .handler(async ({ data }) => {
-    const supa = publicClient();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const ref = makeRef();
-    const { data: row, error } = await supa
+    const { data: row, error } = await supabaseAdmin
       .from("reservations")
       .insert({ ...data, ref, status: "pending" })
       .select("ref")
