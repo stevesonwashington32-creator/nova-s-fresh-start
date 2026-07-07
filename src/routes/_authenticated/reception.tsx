@@ -453,10 +453,10 @@ function ReservationRow({
             {r.status === "pending" && (
               <ActBtn title="Confirm" onClick={() => onStatus("confirmed")}><Check className="h-3.5 w-3.5" /></ActBtn>
             )}
-            {(r.status === "confirmed" || r.status === "late") && (
+            {(r.status === "pending" || r.status === "confirmed" || r.status === "late") && (
               <ActBtn title="Mark arrived" onClick={() => onStatus("arrived")}><Utensils className="h-3.5 w-3.5" /></ActBtn>
             )}
-            {r.status === "confirmed" && (
+            {(r.status === "pending" || r.status === "confirmed") && (
               <ActBtn title="Mark late" onClick={() => onStatus("late")}><Clock className="h-3.5 w-3.5" /></ActBtn>
             )}
             {r.status === "arrived" && (
