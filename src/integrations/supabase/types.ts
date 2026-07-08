@@ -55,7 +55,7 @@ export type Database = {
           occasion?: string | null
           party_size: string
           phone: string
-          ref: string
+          ref?: string
           reservation_date: string
           reservation_time: string
           special_requests?: string | null
