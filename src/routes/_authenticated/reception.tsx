@@ -392,6 +392,7 @@ function ReservationRow({
   onReschedule: () => void;
   onDelete: () => void;
 }) {
+  const [showFull, setShowFull] = useState(false);
   const currentTable = tables.find((t) => t.id === r.table_id);
   // Available: fits capacity AND (not occupied OR is this reservation's current table)
   const available = tables.filter(
