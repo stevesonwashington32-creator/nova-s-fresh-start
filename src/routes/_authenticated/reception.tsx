@@ -16,6 +16,7 @@ import {
 } from "@/lib/reservations.functions";
 import {
   Users, Trash2, Check, Clock, CalendarClock, Utensils, X, MoreVertical,
+  ChevronDown,
 } from "lucide-react";
 import {
   DropdownMenu,
