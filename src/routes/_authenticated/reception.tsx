@@ -417,7 +417,19 @@ function ReservationRow({
         <div className="text-paper/70 text-sm">
           <p>{r.occasion || "—"}</p>
           {r.special_requests && (
-            <p className="text-paper/40 text-xs mt-1 line-clamp-2">{r.special_requests}</p>
+            <div className="mt-1">
+              <p className={`text-paper/40 text-xs ${showFull ? "" : "line-clamp-2"}`}>
+                {r.special_requests}
+              </p>
+              <button
+                onClick={() => setShowFull((v) => !v)}
+                className="inline-flex items-center gap-0.5 text-paper/30 hover:text-sand text-[10px] mt-0.5 transition-colors"
+                aria-label={showFull ? "Show less" : "Show more"}
+              >
+                <ChevronDown className={`h-3 w-3 transition-transform ${showFull ? "rotate-180" : ""}`} />
+                {showFull ? "Less" : "More"}
+              </button>
+            </div>
           )}
         </div>
         <div className="flex flex-col gap-2">
