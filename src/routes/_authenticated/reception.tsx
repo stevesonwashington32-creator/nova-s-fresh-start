@@ -54,8 +54,9 @@ type Reservation = {
 };
 type RestaurantTable = { id: string; number: number; capacity: number };
 
-const FILTERS = ["Pending", "Confirmed", "Tonight", "Today"] as const;
+const FILTERS = ["All", "Pending", "Confirmed", "Tonight", "Today"] as const;
 type Filter = typeof FILTERS[number];
+
 
 function formatDate(d: string) {
   return new Date(d + "T00:00:00").toLocaleDateString("en-GB", {
