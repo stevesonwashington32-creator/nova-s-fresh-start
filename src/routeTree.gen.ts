@@ -14,7 +14,6 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedReceptionRouteImport } from './routes/_authenticated/reception'
-import { Route as ApiPublicBootstrapReceptionistRouteImport } from './routes/api/public/bootstrap-receptionist'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -40,26 +39,18 @@ const AuthenticatedReceptionRoute = AuthenticatedReceptionRouteImport.update({
   path: '/reception',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ApiPublicBootstrapReceptionistRoute =
-  ApiPublicBootstrapReceptionistRouteImport.update({
-    id: '/api/public/bootstrap-receptionist',
-    path: '/api/public/bootstrap-receptionist',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/reception': typeof AuthenticatedReceptionRoute
-  '/api/public/bootstrap-receptionist': typeof ApiPublicBootstrapReceptionistRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/reception': typeof AuthenticatedReceptionRoute
-  '/api/public/bootstrap-receptionist': typeof ApiPublicBootstrapReceptionistRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,23 +59,12 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/reception': typeof AuthenticatedReceptionRoute
-  '/api/public/bootstrap-receptionist': typeof ApiPublicBootstrapReceptionistRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/auth'
-    | '/sitemap.xml'
-    | '/reception'
-    | '/api/public/bootstrap-receptionist'
+  fullPaths: '/' | '/auth' | '/sitemap.xml' | '/reception'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/auth'
-    | '/sitemap.xml'
-    | '/reception'
-    | '/api/public/bootstrap-receptionist'
+  to: '/' | '/auth' | '/sitemap.xml' | '/reception'
   id:
     | '__root__'
     | '/'
@@ -92,7 +72,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/_authenticated/reception'
-    | '/api/public/bootstrap-receptionist'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -100,7 +79,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  ApiPublicBootstrapReceptionistRoute: typeof ApiPublicBootstrapReceptionistRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,13 +118,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReceptionRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/api/public/bootstrap-receptionist': {
-      id: '/api/public/bootstrap-receptionist'
-      path: '/api/public/bootstrap-receptionist'
-      fullPath: '/api/public/bootstrap-receptionist'
-      preLoaderRoute: typeof ApiPublicBootstrapReceptionistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -166,7 +137,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  ApiPublicBootstrapReceptionistRoute: ApiPublicBootstrapReceptionistRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
