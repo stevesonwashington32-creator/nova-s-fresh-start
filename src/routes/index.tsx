@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
@@ -29,11 +29,11 @@ export const Route = createFileRoute("/")({
       { name: "keywords", content: "Nova Restaurant and Bar, Asaba restaurant, Okpanam Road, Delta State dining, restaurant reservation Asaba" },
       { property: "og:title", content: "Nova Restaurant and Bar — Asaba" },
       { property: "og:description", content: "Fine dining and drinks on Okpanam Road, Asaba. Reserve any time of day." },
-      { property: "og:image", content: diningRoom },
-      { property: "og:url", content: "/" },
-      { name: "twitter:image", content: diningRoom },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://nova-revived-shine.lovable.app/" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://nova-revived-shine.lovable.app/" }],
   }),
   component: Index,
 });
@@ -184,9 +184,16 @@ function Index() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-6 flex justify-between items-center mix-blend-difference text-paper">
         <a href="#" className="text-xs uppercase tracking-[0.35em] font-medium">Nova &mdash; Est. 2022</a>
         <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.25em] font-medium items-center">
+          <Link to="/menu" className="hover:text-sand transition-colors">Food Menu</Link>
           <a href="#story" className="hover:text-sand transition-colors">Our Story</a>
           <a href="#reserve" className="hover:text-sand transition-colors">Reservations</a>
         </div>
+        <Link
+          to="/menu"
+          className="md:hidden border-b border-paper/70 pb-1 text-[10px] uppercase tracking-[0.2em] font-medium"
+        >
+          Menu
+        </Link>
       </nav>
 
       <main className="grid lg:grid-cols-2 min-h-screen">

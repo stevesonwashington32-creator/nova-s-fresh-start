@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-// TODO: replace with project URL once a custom domain is set.
-const BASE_URL = "";
+const BASE_URL = "https://nova-revived-shine.lovable.app";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -10,6 +9,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const urls = [
           `  <url><loc>${BASE_URL}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
+          `  <url><loc>${BASE_URL}/menu</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
         ];
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,

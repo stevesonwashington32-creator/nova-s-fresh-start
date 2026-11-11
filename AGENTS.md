@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+Public menu content belongs in `src/data/menu.ts`, separate from its presentation route, so menu items can be reused consistently.
