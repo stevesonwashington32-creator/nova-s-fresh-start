@@ -8,6 +8,10 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { title: "Reception Sign In — Nova" },
       { name: "description", content: "Reception access to the Nova reservations dashboard." },
+      { property: "og:title", content: "Reception Sign In — Nova" },
+      { property: "og:description", content: "Sign in to manage Nova Restaurant and Bar reservations in Asaba." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
