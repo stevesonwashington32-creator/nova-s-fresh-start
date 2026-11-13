@@ -17,7 +17,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Pineapple Fried Rice",
     category: "Rice & local favorites",
-    description: "A guest-mentioned favorite from Nova’s kitchen.",
+    description: "A vibrant rice dish with a fresh, tropical finish.",
     note: "Guest favorite",
     image: pineappleRice,
     imageAlt: "Pineapple fried rice served in a carved pineapple",
@@ -25,7 +25,7 @@ export const menuItems: MenuItem[] = [
   {
     name: "Nigerian Jollof Rice",
     category: "Rice & local favorites",
-    description: "A familiar Nigerian classic, recommended by Nova guests.",
+    description: "A Nigerian classic served with grilled plantain.",
     note: "Local favorite",
     image: jollof,
     imageAlt: "Nigerian jollof rice with grilled plantain",

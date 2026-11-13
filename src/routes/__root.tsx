@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#1a1714" },
-      { property: "og:site_name", content: "Nova" },
+      { property: "og:site_name", content: "Restaurant Name" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -91,30 +91,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600&display=swap",
-      },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Restaurant",
-          name: "Nova Restaurant and Bar",
-          description: "Fine dining and drinks on Okpanam Road, Asaba. Open all day.",
-          servesCuisine: ["Nigerian", "Continental"],
-          priceRange: "$$$",
-          acceptsReservations: "True",
-          telephone: "+2349039986098",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "84 Okpanam Road, Opp. Legislative Quarters, GRA",
-            addressLocality: "Asaba",
-            addressRegion: "Delta",
-            addressCountry: "NG",
-          },
-          openingHours: "Mo-Su 08:00-23:00",
-        }),
-
       },
     ],
   }),
