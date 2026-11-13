@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowDownRight, ArrowLeft, ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { menuItems, type MenuCategory } from "@/data/menu";
 
 const categories: MenuCategory[] = ["Rice & local favorites", "From the grill"];
@@ -7,22 +7,22 @@ const categories: MenuCategory[] = ["Rice & local favorites", "From the grill"];
 export const Route = createFileRoute("/menu")({
   head: () => ({
     meta: [
-      { title: "Food Menu — Nova Restaurant and Bar, Asaba" },
+      { title: "Food Menu — Restaurant Name" },
       {
         name: "description",
         content:
-          "Explore guest-mentioned favorites and grill selections at Nova Restaurant and Bar on Okpanam Road, Asaba.",
+          "Explore the restaurant’s menu, including local favorites and selections from the grill.",
       },
-      { property: "og:title", content: "Food Menu — Nova Restaurant and Bar" },
+      { property: "og:title", content: "Food Menu — Restaurant Name" },
       {
         property: "og:description",
-        content: "Guest-mentioned favorites and grill selections at Nova in Asaba.",
+        content: "Explore local favorites and selections from the grill.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nova-revived-shine.lovable.app/menu" },
+      { property: "og:url", content: "https://nova-asaba.lovable.app/menu" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://nova-revived-shine.lovable.app/menu" }],
+    links: [{ rel: "canonical", href: "https://nova-asaba.lovable.app/menu" }],
   }),
   component: MenuPage,
 });
@@ -32,7 +32,7 @@ function MenuPage() {
     <main className="min-h-screen bg-cream text-ink">
       <header className="flex items-center justify-between border-b border-ink/10 px-6 py-5 lg:px-12">
         <Link to="/" className="text-[10px] font-medium uppercase tracking-[0.3em]">
-          Nova <span className="text-ink/40">· Asaba</span>
+          Restaurant Name
         </Link>
         <Link
           to="/"
@@ -46,7 +46,7 @@ function MenuPage() {
         <div className="mb-14 grid gap-8 border-b border-ink/10 pb-12 lg:grid-cols-[1fr_21rem] lg:items-end">
           <div>
             <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.35em] text-sienna">
-              Nova Restaurant and Bar · Asaba
+              Restaurant Menu
             </p>
             <h1 className="max-w-3xl text-6xl leading-[0.9] sm:text-7xl lg:text-8xl" style={{ fontFamily: "var(--font-display)" }}>
               From our <span className="italic text-burnt">kitchen.</span>
@@ -54,10 +54,10 @@ function MenuPage() {
           </div>
           <div className="lg:justify-self-end lg:text-right">
             <p className="max-w-sm text-sm leading-relaxed text-ink/65 lg:ml-auto">
-              A small taste of what guests have enjoyed at Nova. Ask our team about today’s full selection.
+              Explore a selection of dishes. Ask the restaurant about today’s full menu.
             </p>
             <a
-              href="tel:+2349039986098"
+              href="/"
               className="mt-5 inline-flex items-center gap-2 border-b border-sienna pb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna"
             >
               Ask about today’s menu <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -129,16 +129,11 @@ function MenuPage() {
 
         <aside className="mt-14 flex flex-col gap-5 border-t border-ink/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-2xl text-xs leading-relaxed text-ink/55">
-            Menu availability and preparation may vary. Contact Nova for current selections and pricing.
+            Menu availability and preparation may vary. Contact the restaurant for current selections and pricing.
           </p>
-          <a
-            href="https://maps.google.com/?q=Nova+Restaurant+and+Bar+84+Okpanam+Road+Asaba"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-sienna transition-colors hover:text-burnt"
-          >
-            <MapPin className="h-4 w-4" aria-hidden="true" /> Find us in Asaba
-          </a>
+          <Link to="/" className="inline-flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-sienna transition-colors hover:text-burnt">
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Make a reservation
+          </Link>
         </aside>
       </section>
     </main>

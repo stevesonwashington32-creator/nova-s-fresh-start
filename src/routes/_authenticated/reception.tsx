@@ -32,10 +32,10 @@ import {
 export const Route = createFileRoute("/_authenticated/reception")({
   head: () => ({
     meta: [
-      { title: "Reception — Nova" },
-      { name: "description", content: "Manage guest bookings and table assignments for Nova Restaurant and Bar in Asaba." },
-      { property: "og:title", content: "Reception Dashboard — Nova Restaurant and Bar" },
-      { property: "og:description", content: "Reception dashboard for managing Nova restaurant reservations." },
+      { title: "Reception — Restaurant Name" },
+      { name: "description", content: "Manage guest bookings and table assignments for your restaurant." },
+      { property: "og:title", content: "Reception Dashboard — Restaurant Name" },
+      { property: "og:description", content: "Manage restaurant reservations and table assignments." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },

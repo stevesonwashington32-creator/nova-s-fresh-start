@@ -24,16 +24,16 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Nova Restaurant and Bar — Reserve a Table in Asaba" },
-      { name: "description", content: "Reserve a table at Nova Restaurant and Bar on Okpanam Road, Asaba. Fine dining and drinks — open all day, book any time that suits you." },
-      { name: "keywords", content: "Nova Restaurant and Bar, Asaba restaurant, Okpanam Road, Delta State dining, restaurant reservation Asaba" },
-      { property: "og:title", content: "Nova Restaurant and Bar — Asaba" },
-      { property: "og:description", content: "Fine dining and drinks on Okpanam Road, Asaba. Reserve any time of day." },
+      { title: "Restaurant Reservations — Book a Table" },
+      { name: "description", content: "Reserve a table at your restaurant for a meal, a gathering, or a special occasion." },
+      { name: "keywords", content: "restaurant reservations, book a table, dining" },
+      { property: "og:title", content: "Restaurant Reservations — Book a Table" },
+      { property: "og:description", content: "Reserve a table for a meal, a gathering, or a special occasion." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nova-revived-shine.lovable.app/" },
+      { property: "og:url", content: "https://nova-asaba.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://nova-revived-shine.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://nova-asaba.lovable.app/" }],
   }),
   component: Index,
 });
@@ -182,7 +182,7 @@ function Index() {
     <div className="min-h-screen bg-cream text-ink selection:bg-sienna/20" style={{ fontFamily: "var(--font-body)" }}>
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-6 flex justify-between items-center mix-blend-difference text-paper">
-        <a href="#" className="text-xs uppercase tracking-[0.35em] font-medium">Nova &mdash; Est. 2022</a>
+        <a href="#" className="text-xs uppercase tracking-[0.35em] font-medium">Restaurant Name</a>
         <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.25em] font-medium items-center">
           <Link to="/menu" className="hover:text-sand transition-colors">Food Menu</Link>
           <a href="#story" className="hover:text-sand transition-colors">Our Story</a>
@@ -205,13 +205,13 @@ function Index() {
         {/* Right: scrolling magazine column */}
         <div className="relative flex flex-col">
           <section className="px-8 lg:px-16 pt-32 pb-20 border-b animate-fade-in">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">Fine Dining · Est. 2022</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">Dining · Gatherings · Reservations</span>
             <h1 className="text-[18vw] lg:text-[10rem] leading-[0.85] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
-              Nova
+              Restaurant Name
             </h1>
             <p className="max-w-[42ch] text-lg leading-relaxed text-ink/70 text-pretty">
-              A calm room on Okpanam Road for lunch, drinks and long dinners.
-              We welcome you to our table — <span className="italic" style={{ fontFamily: "var(--font-display)" }}>any time of day.</span>
+              A welcoming place for good food and time well spent.
+              Join us at the table — <span className="italic" style={{ fontFamily: "var(--font-display)" }}>any time of day.</span>
             </p>
             <a href="#reserve" className="mt-10 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-ink border-b border-current pb-1 hover:text-sienna transition-colors">
               Reserve a Table
@@ -261,7 +261,7 @@ function Index() {
                       <input type="text" required maxLength={120} value={form.guest_name} onChange={(e) => setForm({ ...form, guest_name: e.target.value })} placeholder="Full name" className="w-full bg-transparent border-b py-2 text-sm placeholder:text-ink/30 focus:border-sienna outline-none transition-colors" />
                     </Field>
                     <Field label="Phone">
-                      <input type="tel" required maxLength={40} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+45 32 96 32 97" className="w-full bg-transparent border-b py-2 text-sm placeholder:text-ink/30 focus:border-sienna outline-none transition-colors" />
+                      <input type="tel" required maxLength={40} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="Phone number" className="w-full bg-transparent border-b py-2 text-sm placeholder:text-ink/30 focus:border-sienna outline-none transition-colors" />
                     </Field>
                   </div>
 
@@ -366,7 +366,7 @@ function Index() {
                   <div className="pt-6 border-t space-y-6 text-[11px]">
                     <div>
                       <p className="uppercase tracking-widest text-ink/40 mb-1">Running late?</p>
-                      <a href="tel:+2349039986098" className="text-sienna hover:text-burnt transition-colors">+234 903 998 6098</a>
+                      <span className="text-ink/60">Contact the restaurant for assistance.</span>
                     </div>
                     <div>
                       <p className="uppercase tracking-widest text-ink/40 mb-2">Cancel a reservation</p>
@@ -430,9 +430,8 @@ function Index() {
               Born from the <span className="italic text-burnt">embers</span>.
             </h3>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70 mb-6">
-              Nova opened its doors on Okpanam Road with a single idea &mdash; a warm,
-              considered room where Asaba could gather from morning coffee to a late
-              nightcap, without ever feeling rushed.
+              A welcoming table, thoughtful hospitality, and food made to bring people
+              together — from the first meal of the day to the last.
             </p>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70">
               Our kitchen serves through the day; our bar keeps company into the night;
@@ -446,18 +445,15 @@ function Index() {
               <div className="space-y-5">
                 <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
                 <p className="text-sm text-paper/60 leading-relaxed">
-                  84 Okpanam Road<br />
-                  Opp. Legislative Quarters, GRA<br />
-                  Asaba, Delta State, Nigeria<br />
-                  Open daily · 08:00 – 23:00
+                  Add your restaurant’s address and opening hours here.
                 </p>
 
                 <p className="text-sm text-paper/60">
-                  <a href="tel:+2349039986098" className="hover:text-sand transition-colors">+234 903 998 6098</a>
+                  Add a contact number here.
                 </p>
               </div>
               <div className="flex lg:items-end justify-end">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-paper/30">© 2026 Nova</p>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-paper/30">© 2026 Restaurant Name</p>
               </div>
             </div>
           </footer>
@@ -508,7 +504,7 @@ function ReviewsSlider() {
   return (
     <>
       {/* Static background */}
-      <img src={diningRoom} alt="Nova dining room" className="absolute inset-0 w-full h-full object-cover" />
+      <img src={diningRoom} alt="Restaurant dining room" className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
 
       <div className="absolute top-0 left-0 right-0 p-8 lg:p-10 flex items-center justify-between z-10">

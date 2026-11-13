@@ -6,10 +6,10 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Reception Sign In — Nova" },
-      { name: "description", content: "Reception access to the Nova reservations dashboard." },
-      { property: "og:title", content: "Reception Sign In — Nova" },
-      { property: "og:description", content: "Sign in to manage Nova Restaurant and Bar reservations in Asaba." },
+      { title: "Reception Sign In — Restaurant Name" },
+      { name: "description", content: "Authorized staff sign in to manage restaurant reservations." },
+      { property: "og:title", content: "Reception Sign In — Restaurant Name" },
+      { property: "og:description", content: "Sign in to manage restaurant reservations." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex,nofollow" },
@@ -48,7 +48,7 @@ function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-night text-paper px-6" style={{ fontFamily: "var(--font-body)" }}>
       <div className="w-full max-w-sm">
-        <Link to="/" className="text-[10px] uppercase tracking-[0.4em] text-sand block mb-12 text-center">Nova · Est. 2022</Link>
+        <Link to="/" className="text-[10px] uppercase tracking-[0.4em] text-sand block mb-12 text-center">Restaurant Name</Link>
         <h1 className="text-4xl text-center mb-2" style={{ fontFamily: "var(--font-display)" }}>
           Reception <span className="italic text-sand">Access</span>
         </h1>
