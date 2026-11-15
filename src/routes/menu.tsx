@@ -56,12 +56,9 @@ function MenuPage() {
             <p className="max-w-sm text-sm leading-relaxed text-ink/65 lg:ml-auto">
               Explore a selection of dishes. Ask the restaurant about today’s full menu.
             </p>
-            <a
-              href="/"
-              className="mt-5 inline-flex items-center gap-2 border-b border-sienna pb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna"
-            >
+            <p className="mt-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna">
               Ask about today’s menu <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
+            </p>
           </div>
         </div>
 

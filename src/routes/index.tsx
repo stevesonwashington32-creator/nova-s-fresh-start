@@ -206,7 +206,7 @@ function Index() {
         <div className="relative flex flex-col">
           <section className="px-8 lg:px-16 pt-32 pb-20 border-b animate-fade-in">
             <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">Dining · Gatherings · Reservations</span>
-            <h1 className="text-[18vw] lg:text-[10rem] leading-[0.85] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl leading-[0.85] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
               Restaurant Name
             </h1>
             <p className="max-w-[42ch] text-lg leading-relaxed text-ink/70 text-pretty">
@@ -544,7 +544,7 @@ function ReviewsSlider() {
         <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center z-10">
           <p className="text-[10px] uppercase tracking-[0.4em] text-paper/60 mb-4">Guest Reviews</p>
           <p className="text-paper/90 text-lg italic max-w-[32ch]" style={{ fontFamily: "var(--font-display)" }}>
-            No reviews found yet — be the first to share your evening with us.
+            No reviews yet.
           </p>
         </div>
       )}
