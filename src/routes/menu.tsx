@@ -1,19 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { menuItems, type MenuCategory } from "@/data/menu";
+import { restaurantProfile } from "@/data/restaurant";
 
-const categories: MenuCategory[] = ["Rice & local favorites", "From the grill"];
+const categories: MenuCategory[] = ["House favorites", "From the grill"];
 
 export const Route = createFileRoute("/menu")({
   head: () => ({
     meta: [
-      { title: "Food Menu — Restaurant Name" },
+      { title: `Food Menu — ${restaurantProfile.name}` },
       {
         name: "description",
         content:
           "Explore the restaurant’s menu, including local favorites and selections from the grill.",
       },
-      { property: "og:title", content: "Food Menu — Restaurant Name" },
+      { property: "og:title", content: `Food Menu — ${restaurantProfile.name}` },
       {
         property: "og:description",
         content: "Explore local favorites and selections from the grill.",
@@ -32,7 +33,7 @@ function MenuPage() {
     <main className="min-h-screen bg-cream text-ink">
       <header className="flex items-center justify-between border-b border-ink/10 px-6 py-5 lg:px-12">
         <Link to="/" className="text-[10px] font-medium uppercase tracking-[0.3em]">
-          Restaurant Name
+          {restaurantProfile.name}
         </Link>
         <Link
           to="/"
@@ -56,12 +57,9 @@ function MenuPage() {
             <p className="max-w-sm text-sm leading-relaxed text-ink/65 lg:ml-auto">
               Explore a selection of dishes. Ask the restaurant about today’s full menu.
             </p>
-            <a
-              href="/"
-              className="mt-5 inline-flex items-center gap-2 border-b border-sienna pb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna"
-            >
+            <p className="mt-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna">
               Ask about today’s menu <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
+            </p>
           </div>
         </div>
 
@@ -69,7 +67,7 @@ function MenuPage() {
           {categories.map((category, index) => (
             <a
               key={category}
-              href={`#${index === 0 ? "local-favorites" : "from-the-grill"}`}
+              href={`#${index === 0 ? "house-favorites" : "from-the-grill"}`}
               className="text-[10px] uppercase tracking-[0.2em] text-ink/55 transition-colors hover:text-sienna"
             >
               {category}
@@ -82,7 +80,7 @@ function MenuPage() {
           return (
             <section
               key={category}
-              id={sectionIndex === 0 ? "local-favorites" : "from-the-grill"}
+              id={sectionIndex === 0 ? "house-favorites" : "from-the-grill"}
               className="mb-16 scroll-mt-8 last:mb-0"
             >
               <div className="mb-7 flex items-end justify-between border-b border-ink/10 pb-4">
