@@ -514,7 +514,7 @@ function ReviewsSlider() {
       <div className="absolute inset-0 bg-gradient-to-b from-night/50 via-night/60 to-night/90" />
 
       <div className="absolute top-0 left-0 right-0 p-8 lg:p-10 flex items-center justify-between z-10">
-        <span className="text-[10px] uppercase tracking-[0.4em] text-paper/70">Guest Reviews · Google</span>
+        <span className="text-[10px] uppercase tracking-[0.4em] text-paper/70">Guest Reviews</span>
         {reviews.length > 0 && (
           <span className="text-[10px] uppercase tracking-[0.3em] text-paper/60">
             ★ {data.rating.toFixed(1)} · {data.userRatingCount}
