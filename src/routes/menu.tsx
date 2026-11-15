@@ -1,19 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { menuItems, type MenuCategory } from "@/data/menu";
+import { restaurantProfile } from "@/data/restaurant";
 
 const categories: MenuCategory[] = ["Rice & local favorites", "From the grill"];
 
 export const Route = createFileRoute("/menu")({
   head: () => ({
     meta: [
-      { title: "Food Menu — Restaurant Name" },
+      { title: `Food Menu — ${restaurantProfile.name}` },
       {
         name: "description",
         content:
           "Explore the restaurant’s menu, including local favorites and selections from the grill.",
       },
-      { property: "og:title", content: "Food Menu — Restaurant Name" },
+      { property: "og:title", content: `Food Menu — ${restaurantProfile.name}` },
       {
         property: "og:description",
         content: "Explore local favorites and selections from the grill.",
@@ -32,7 +33,7 @@ function MenuPage() {
     <main className="min-h-screen bg-cream text-ink">
       <header className="flex items-center justify-between border-b border-ink/10 px-6 py-5 lg:px-12">
         <Link to="/" className="text-[10px] font-medium uppercase tracking-[0.3em]">
-          Restaurant Name
+          {restaurantProfile.name}
         </Link>
         <Link
           to="/"

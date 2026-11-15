@@ -1,14 +1,15 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { restaurantProfile } from "@/data/restaurant";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Reception Sign In — Restaurant Name" },
+      { title: `Reception Sign In — ${restaurantProfile.name}` },
       { name: "description", content: "Authorized staff sign in to manage restaurant reservations." },
-      { property: "og:title", content: "Reception Sign In — Restaurant Name" },
+      { property: "og:title", content: `Reception Sign In — ${restaurantProfile.name}` },
       { property: "og:description", content: "Sign in to manage restaurant reservations." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -48,7 +49,7 @@ function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-night text-paper px-6" style={{ fontFamily: "var(--font-body)" }}>
       <div className="w-full max-w-sm">
-        <Link to="/" className="text-[10px] uppercase tracking-[0.4em] text-sand block mb-12 text-center">Restaurant Name</Link>
+        <Link to="/" className="text-[10px] uppercase tracking-[0.4em] text-sand block mb-12 text-center">{restaurantProfile.name}</Link>
         <h1 className="text-4xl text-center mb-2" style={{ fontFamily: "var(--font-display)" }}>
           Reception <span className="italic text-sand">Access</span>
         </h1>

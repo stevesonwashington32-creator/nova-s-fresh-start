@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { restaurantProfile } from "@/data/restaurant";
 import {
   listReservations,
   updateReservationStatus,
@@ -32,9 +33,9 @@ import {
 export const Route = createFileRoute("/_authenticated/reception")({
   head: () => ({
     meta: [
-      { title: "Reception — Restaurant Name" },
+      { title: `Reception — ${restaurantProfile.name}` },
       { name: "description", content: "Manage guest bookings and table assignments for your restaurant." },
-      { property: "og:title", content: "Reception Dashboard — Restaurant Name" },
+      { property: "og:title", content: `Reception Dashboard — ${restaurantProfile.name}` },
       { property: "og:description", content: "Manage restaurant reservations and table assignments." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -276,7 +277,7 @@ function ReceptionPage() {
 
       <header className="border-b border-paper/10">
         <div className="px-6 lg:px-10 py-6 flex items-center justify-between">
-          <div className="text-2xl tracking-[0.3em] text-sand" style={{ fontFamily: "var(--font-display)" }}>Restaurant Name</div>
+          <div className="text-2xl tracking-[0.3em] text-sand" style={{ fontFamily: "var(--font-display)" }}>{restaurantProfile.name}</div>
           <div className="flex items-center gap-6 text-xs">
             <span className="flex items-center gap-2 text-sand/80 uppercase tracking-[0.3em]">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
