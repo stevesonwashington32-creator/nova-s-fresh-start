@@ -10,3 +10,5 @@
 <!-- LOVABLE:END -->
 
 Public menu content belongs in `src/data/menu.ts`, separate from its presentation route, so menu items can be reused consistently.
+
+Restaurant identity and business details belong in `src/data/restaurant.ts` so public, staff, menu, and metadata share one editable profile.

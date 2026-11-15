@@ -2,7 +2,7 @@
 
 # North star
 
-Guests get a table at Nova and sit down to their meal.
+Guests get a table at a restaurant and sit down to their meal.
 
 ## Metric
 
