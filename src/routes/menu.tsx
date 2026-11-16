@@ -4,7 +4,7 @@ import { menuItems, type MenuCategory } from "@/data/menu";
 import { restaurantProfile } from "@/data/restaurant";
 import { getSiteOrigin } from "@/lib/site-origin.functions";
 
-const categories: MenuCategory[] = ["Rice & local favorites", "From the grill"];
+const categories: MenuCategory[] = ["House favorites", "From the grill"];
 
 export const Route = createFileRoute("/menu")({
   loader: () => getSiteOrigin(),
@@ -69,7 +69,7 @@ function MenuPage() {
           {categories.map((category, index) => (
             <a
               key={category}
-              href={`#${index === 0 ? "local-favorites" : "from-the-grill"}`}
+              href={`#${index === 0 ? "house-favorites" : "from-the-grill"}`}
               className="text-[10px] uppercase tracking-[0.2em] text-ink/55 transition-colors hover:text-sienna"
             >
               {category}
@@ -82,7 +82,7 @@ function MenuPage() {
           return (
             <section
               key={category}
-              id={sectionIndex === 0 ? "local-favorites" : "from-the-grill"}
+              id={sectionIndex === 0 ? "house-favorites" : "from-the-grill"}
               className="mb-16 scroll-mt-8 last:mb-0"
             >
               <div className="mb-7 flex items-end justify-between border-b border-ink/10 pb-4">

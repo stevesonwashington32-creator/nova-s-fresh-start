@@ -2,7 +2,7 @@ import pineappleRice from "@/assets/pineapple-fried-rice.jpg";
 import barbecue from "@/assets/smoky-bbq.jpg";
 import jollof from "@/assets/jollof-rice.jpg";
 
-export type MenuCategory = "Rice & local favorites" | "From the grill";
+export type MenuCategory = "House favorites" | "From the grill";
 
 export type MenuItem = {
   name: string;
@@ -15,23 +15,23 @@ export type MenuItem = {
 
 export const menuItems: MenuItem[] = [
   {
-    name: "Pineapple Fried Rice",
-    category: "Rice & local favorites",
+    name: "Signature Rice",
+    category: "House favorites",
     description: "A house rice dish prepared with a fresh, vibrant finish.",
     note: "House favorite",
     image: pineappleRice,
-    imageAlt: "Pineapple fried rice served in a carved pineapple",
+    imageAlt: "Signature rice dish served in a carved pineapple",
   },
   {
-    name: "Nigerian Jollof Rice",
-    category: "Rice & local favorites",
-    description: "A familiar Nigerian classic served with grilled plantain.",
+    name: "Seasoned Rice",
+    category: "House favorites",
+    description: "A richly seasoned rice dish served with grilled vegetables.",
     note: "House favorite",
     image: jollof,
-    imageAlt: "Nigerian jollof rice with grilled plantain",
+    imageAlt: "Seasoned rice served with grilled vegetables",
   },
   {
-    name: "Smoky BBQ Chicken or Turkey",
+    name: "Grilled Chicken or Turkey",
     category: "From the grill",
     description: "Smoked, spicy barbecue, with your choice of chicken or turkey.",
     note: "From the grill",

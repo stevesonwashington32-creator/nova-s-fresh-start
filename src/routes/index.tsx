@@ -470,20 +470,23 @@ function Index() {
 
           <footer className="bg-night text-paper p-10 lg:p-16">
             <div className="grid lg:grid-cols-2 gap-12">
-              <div className="space-y-5">
-                <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
-                {(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country || restaurantProfile.openingHours) && (
+              {(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country || restaurantProfile.openingHours || restaurantProfile.phone) && (
+                <div className="space-y-5">
+                  <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
+                  {(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country || restaurantProfile.openingHours) && (
                   <p className="text-sm text-paper/60 leading-relaxed">
                     {[restaurantProfile.address, restaurantProfile.city, restaurantProfile.region, restaurantProfile.country].filter(Boolean).join(", ")}
                     {restaurantProfile.openingHours && <><br />{restaurantProfile.openingHours}</>}
                   </p>
-                )}
+                  )}
 
-                {restaurantProfile.phone && (
-                  <p className="text-sm text-paper/60">
-                    <a href={`tel:${restaurantProfile.phone}`} className="hover:text-sand transition-colors">{restaurantProfile.phone}</a>
-                  </p>
-                )}
+                  {restaurantProfile.phone && (
+                    <p className="text-sm text-paper/60">
+                      <a href={`tel:${restaurantProfile.phone}`} className="hover:text-sand transition-colors">{restaurantProfile.phone}</a>
+                    </p>
+                  )}
+                </div>
+              )}
               </div>
               <div className="flex lg:items-end justify-end">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-paper/30">© {new Date().getFullYear()} {restaurantProfile.name}</p>
