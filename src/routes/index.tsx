@@ -6,6 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { Clock } from "lucide-react";
 import diningRoom from "@/assets/dining-room.jpg";
 import { restaurantProfile } from "@/data/restaurant";
+import { getSiteOrigin } from "@/lib/site-origin.functions";
 import {
   createReservation,
   findReservationsByPhone,
@@ -23,7 +24,8 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
+  loader: () => getSiteOrigin(),
+  head: ({ loaderData: origin }) => ({
     meta: [
       { title: `${restaurantProfile.name} — Reservations` },
       { name: "description", content: "Reserve a table at your restaurant for a meal, a gathering, or a special occasion." },
@@ -31,10 +33,35 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: `${restaurantProfile.name} — Reservations` },
       { property: "og:description", content: "Reserve a table for a meal, a gathering, or a special occasion." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nova-asaba.lovable.app/" },
+      { property: "og:url", content: `${origin}/` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://nova-asaba.lovable.app/" }],
+    links: [{ rel: "canonical", href: `${origin}/` }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        name: restaurantProfile.name,
+        description: restaurantProfile.description,
+        url: origin,
+        ...(restaurantProfile.cuisine.length ? { servesCuisine: restaurantProfile.cuisine } : {}),
+        ...(restaurantProfile.priceRange ? { priceRange: restaurantProfile.priceRange } : {}),
+        ...(restaurantProfile.phone ? { telephone: restaurantProfile.phone } : {}),
+        ...(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country
+          ? {
+              address: {
+                "@type": "PostalAddress",
+                ...(restaurantProfile.address ? { streetAddress: restaurantProfile.address } : {}),
+                ...(restaurantProfile.city ? { addressLocality: restaurantProfile.city } : {}),
+                ...(restaurantProfile.region ? { addressRegion: restaurantProfile.region } : {}),
+                ...(restaurantProfile.country ? { addressCountry: restaurantProfile.country } : {}),
+              },
+            }
+          : {}),
+        ...(restaurantProfile.openingHours ? { openingHours: restaurantProfile.openingHours } : {}),
+      }),
+    }],
   }),
   component: Index,
 });
@@ -207,11 +234,11 @@ function Index() {
         <div className="relative flex flex-col">
           <section className="px-8 lg:px-16 pt-32 pb-20 border-b animate-fade-in">
             <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">{restaurantProfile.tagline}</span>
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl leading-[0.85] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
+            <h1 className="text-5xl sm:text-6xl lg:text-8xl leading-[0.95] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
               {restaurantProfile.name}
             </h1>
             <p className="max-w-[42ch] text-lg leading-relaxed text-ink/70 text-pretty">
-              {restaurantProfile.description}
+              {restaurantProfile.description}{" "}
               Join us at the table — <span className="italic" style={{ fontFamily: "var(--font-display)" }}>any time of day.</span>
             </p>
             <a href="#reserve" className="mt-10 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-ink border-b border-current pb-1 hover:text-sienna transition-colors">
@@ -442,20 +469,23 @@ function Index() {
           </section>
 
           <footer className="bg-night text-paper p-10 lg:p-16">
-            <div className="grid lg:grid-cols-2 gap-12">
+            <div className="grid gap-12 lg:grid-cols-2">
               <div className="space-y-5">
-                <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
-                {(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country || restaurantProfile.openingHours) && (
-                  <p className="text-sm text-paper/60 leading-relaxed">
-                    {[restaurantProfile.address, restaurantProfile.city, restaurantProfile.region, restaurantProfile.country].filter(Boolean).join(", ")}
-                    {restaurantProfile.openingHours && <><br />{restaurantProfile.openingHours}</>}
-                  </p>
-                )}
-
-                {restaurantProfile.phone && (
-                  <p className="text-sm text-paper/60">
-                    <a href={`tel:${restaurantProfile.phone}`} className="hover:text-sand transition-colors">{restaurantProfile.phone}</a>
-                  </p>
+                {(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country || restaurantProfile.openingHours || restaurantProfile.phone) && (
+                  <>
+                    <h5 className="text-3xl" style={{ fontFamily: "var(--font-display)" }}>Visit</h5>
+                    {(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country || restaurantProfile.openingHours) && (
+                      <p className="text-sm text-paper/60 leading-relaxed">
+                        {[restaurantProfile.address, restaurantProfile.city, restaurantProfile.region, restaurantProfile.country].filter(Boolean).join(", ")}
+                        {restaurantProfile.openingHours && <><br />{restaurantProfile.openingHours}</>}
+                      </p>
+                    )}
+                    {restaurantProfile.phone && (
+                      <p className="text-sm text-paper/60">
+                        <a href={`tel:${restaurantProfile.phone}`} className="hover:text-sand transition-colors">{restaurantProfile.phone}</a>
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
               <div className="flex lg:items-end justify-end">

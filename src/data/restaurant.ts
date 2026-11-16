@@ -1,5 +1,5 @@
 export const restaurantProfile = {
-  name: "Restaurant Name",
+  name: "Your Restaurant",
   tagline: "Dining · Gatherings · Reservations",
   description: "A welcoming place for good food and time well spent.",
   address: "",
