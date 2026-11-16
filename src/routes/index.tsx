@@ -207,11 +207,11 @@ function Index() {
         <div className="relative flex flex-col">
           <section className="px-8 lg:px-16 pt-32 pb-20 border-b animate-fade-in">
             <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">{restaurantProfile.tagline}</span>
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl leading-[0.85] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
+            <h1 className="text-5xl sm:text-6xl lg:text-8xl leading-[0.95] tracking-tight mb-8" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
               {restaurantProfile.name}
             </h1>
             <p className="max-w-[42ch] text-lg leading-relaxed text-ink/70 text-pretty">
-              {restaurantProfile.description}
+              {restaurantProfile.description}{" "}
               Join us at the table — <span className="italic" style={{ fontFamily: "var(--font-display)" }}>any time of day.</span>
             </p>
             <a href="#reserve" className="mt-10 inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-ink border-b border-current pb-1 hover:text-sienna transition-colors">

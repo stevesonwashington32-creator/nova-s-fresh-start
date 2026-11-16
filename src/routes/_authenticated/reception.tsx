@@ -277,7 +277,7 @@ function ReceptionPage() {
 
       <header className="border-b border-paper/10">
         <div className="px-6 lg:px-10 py-6 flex items-center justify-between">
-          <div className="text-2xl tracking-[0.3em] text-sand" style={{ fontFamily: "var(--font-display)" }}>{restaurantProfile.name}</div>
+          <div className="text-base tracking-[0.1em] text-sand sm:text-2xl sm:tracking-[0.3em]" style={{ fontFamily: "var(--font-display)" }}>{restaurantProfile.name}</div>
           <div className="flex items-center gap-6 text-xs">
             <span className="flex items-center gap-2 text-sand/80 uppercase tracking-[0.3em]">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
