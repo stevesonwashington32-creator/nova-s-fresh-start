@@ -23,12 +23,12 @@ export const menuItems: MenuItem[] = [
     imageAlt: "Signature rice dish served in a carved pineapple",
   },
   {
-    name: "Seasoned Rice with Grilled Vegetables",
+    name: "Jollof Rice",
     category: "House favorites",
-    description: "A comforting rice dish served with seasonal grilled vegetables.",
+    description: "A richly seasoned rice dish served with grilled plantain.",
     note: "House favorite",
     image: jollof,
-    imageAlt: "Seasoned rice served with grilled vegetables",
+    imageAlt: "Jollof rice served with grilled plantain",
   },
   {
     name: "Grilled Chicken or Turkey",
