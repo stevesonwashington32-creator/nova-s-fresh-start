@@ -1,15 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "https://nova-asaba.lovable.app";
-
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        const baseUrl = new URL(request.url).origin;
         const urls = [
-          `  <url><loc>${BASE_URL}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
-          `  <url><loc>${BASE_URL}/menu</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
+          `  <url><loc>${baseUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
+          `  <url><loc>${baseUrl}/menu</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
         ];
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,

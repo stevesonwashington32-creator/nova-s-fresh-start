@@ -2,11 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { menuItems, type MenuCategory } from "@/data/menu";
 import { restaurantProfile } from "@/data/restaurant";
+import { getSiteOrigin } from "@/lib/site-origin.functions";
 
 const categories: MenuCategory[] = ["House favorites", "From the grill"];
 
 export const Route = createFileRoute("/menu")({
-  head: () => ({
+  loader: () => getSiteOrigin(),
+  head: ({ loaderData: origin }) => ({
     meta: [
       { title: `Food Menu — ${restaurantProfile.name}` },
       {
@@ -20,10 +22,10 @@ export const Route = createFileRoute("/menu")({
         content: "Explore local favorites and selections from the grill.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nova-asaba.lovable.app/menu" },
+      { property: "og:url", content: `${origin}/menu` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://nova-asaba.lovable.app/menu" }],
+    links: [{ rel: "canonical", href: `${origin}/menu` }],
   }),
   component: MenuPage,
 });

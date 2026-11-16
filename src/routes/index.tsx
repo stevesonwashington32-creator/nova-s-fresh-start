@@ -6,6 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { Clock } from "lucide-react";
 import diningRoom from "@/assets/dining-room.jpg";
 import { restaurantProfile } from "@/data/restaurant";
+import { getSiteOrigin } from "@/lib/site-origin.functions";
 import {
   createReservation,
   findReservationsByPhone,
@@ -23,7 +24,8 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
+  loader: () => getSiteOrigin(),
+  head: ({ loaderData: origin }) => ({
     meta: [
       { title: `${restaurantProfile.name} — Reservations` },
       { name: "description", content: "Reserve a table at your restaurant for a meal, a gathering, or a special occasion." },
@@ -31,10 +33,35 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: `${restaurantProfile.name} — Reservations` },
       { property: "og:description", content: "Reserve a table for a meal, a gathering, or a special occasion." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nova-asaba.lovable.app/" },
+      { property: "og:url", content: `${origin}/` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://nova-asaba.lovable.app/" }],
+    links: [{ rel: "canonical", href: `${origin}/` }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        name: restaurantProfile.name,
+        description: restaurantProfile.description,
+        url: origin,
+        ...(restaurantProfile.cuisine.length ? { servesCuisine: restaurantProfile.cuisine } : {}),
+        ...(restaurantProfile.priceRange ? { priceRange: restaurantProfile.priceRange } : {}),
+        ...(restaurantProfile.phone ? { telephone: restaurantProfile.phone } : {}),
+        ...(restaurantProfile.address || restaurantProfile.city || restaurantProfile.region || restaurantProfile.country
+          ? {
+              address: {
+                "@type": "PostalAddress",
+                ...(restaurantProfile.address ? { streetAddress: restaurantProfile.address } : {}),
+                ...(restaurantProfile.city ? { addressLocality: restaurantProfile.city } : {}),
+                ...(restaurantProfile.region ? { addressRegion: restaurantProfile.region } : {}),
+                ...(restaurantProfile.country ? { addressCountry: restaurantProfile.country } : {}),
+              },
+            }
+          : {}),
+        ...(restaurantProfile.openingHours ? { openingHours: restaurantProfile.openingHours } : {}),
+      }),
+    }],
   }),
   component: Index,
 });

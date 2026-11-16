@@ -1,6 +1,6 @@
 import pineappleRice from "@/assets/pineapple-fried-rice.jpg";
 import barbecue from "@/assets/smoky-bbq.jpg";
-import jollof from "@/assets/nigerian-jollof.jpg";
+import jollof from "@/assets/jollof-rice.jpg";
 
 export type MenuCategory = "House favorites" | "From the grill";
 
@@ -23,12 +23,12 @@ export const menuItems: MenuItem[] = [
     imageAlt: "Signature rice dish served in a carved pineapple",
   },
   {
-    name: "House Special",
+    name: "Seasoned Rice with Grilled Vegetables",
     category: "House favorites",
-    description: "A comforting house special served with a side of grilled vegetables.",
+    description: "A comforting rice dish served with seasonal grilled vegetables.",
     note: "House favorite",
     image: jollof,
-    imageAlt: "House special served with grilled vegetables",
+    imageAlt: "Seasoned rice served with grilled vegetables",
   },
   {
     name: "Grilled Chicken or Turkey",
