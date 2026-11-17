@@ -2,13 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { menuItems, type MenuCategory } from "@/data/menu";
 import { restaurantProfile } from "@/data/restaurant";
-import { getSiteOrigin } from "@/lib/site-origin.functions";
 
 const categories: MenuCategory[] = ["House favorites", "From the grill"];
 
 export const Route = createFileRoute("/menu")({
-  loader: () => getSiteOrigin(),
-  head: ({ loaderData: origin }) => ({
+  head: () => ({
     meta: [
       { title: `Food Menu — ${restaurantProfile.name}` },
       {
@@ -22,10 +20,10 @@ export const Route = createFileRoute("/menu")({
         content: "Explore local favorites and selections from the grill.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `${origin}/menu` },
+      { property: "og:url", content: "https://reservation-management-site.lovable.app/menu" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: `${origin}/menu` }],
+    links: [{ rel: "canonical", href: "https://reservation-management-site.lovable.app/menu" }],
   }),
   component: MenuPage,
 });
@@ -59,9 +57,13 @@ function MenuPage() {
             <p className="max-w-sm text-sm leading-relaxed text-ink/65 lg:ml-auto">
               Explore a selection of dishes. Ask the restaurant about today’s full menu.
             </p>
-            <p className="mt-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna">
-              Ask about today’s menu <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </p>
+            <a
+              href={restaurantProfile.phone ? `tel:${restaurantProfile.phone}` : "/#reserve"}
+              className="mt-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sienna"
+            >
+              {restaurantProfile.phone ? "Ask about today’s menu" : "Make a reservation"}
+              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
           </div>
         </div>
 

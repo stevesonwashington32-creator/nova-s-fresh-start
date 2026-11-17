@@ -6,7 +6,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import { Clock } from "lucide-react";
 import diningRoom from "@/assets/dining-room.jpg";
 import { restaurantProfile } from "@/data/restaurant";
-import { getSiteOrigin } from "@/lib/site-origin.functions";
 import {
   createReservation,
   findReservationsByPhone,
@@ -24,8 +23,7 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/")({
-  loader: () => getSiteOrigin(),
-  head: ({ loaderData: origin }) => ({
+  head: () => ({
     meta: [
       { title: `${restaurantProfile.name} — Reservations` },
       { name: "description", content: "Reserve a table at your restaurant for a meal, a gathering, or a special occasion." },
@@ -33,10 +31,10 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: `${restaurantProfile.name} — Reservations` },
       { property: "og:description", content: "Reserve a table for a meal, a gathering, or a special occasion." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `${origin}/` },
+      { property: "og:url", content: "https://reservation-management-site.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: `${origin}/` }],
+    links: [{ rel: "canonical", href: "https://reservation-management-site.lovable.app/" }],
     scripts: [{
       type: "application/ld+json",
       children: JSON.stringify({
@@ -44,7 +42,7 @@ export const Route = createFileRoute("/")({
         "@type": "Restaurant",
         name: restaurantProfile.name,
         description: restaurantProfile.description,
-        url: origin,
+        url: "https://reservation-management-site.lovable.app/",
         ...(restaurantProfile.cuisine.length ? { servesCuisine: restaurantProfile.cuisine } : {}),
         ...(restaurantProfile.priceRange ? { priceRange: restaurantProfile.priceRange } : {}),
         ...(restaurantProfile.phone ? { telephone: restaurantProfile.phone } : {}),
@@ -455,15 +453,13 @@ function Index() {
           <section id="story" className="px-8 lg:px-16 py-24 border-b">
             <span className="text-[10px] uppercase tracking-[0.4em] text-sienna font-semibold mb-6 block">Our Story</span>
             <h3 className="text-4xl lg:text-5xl leading-[1.05] mb-8 max-w-[20ch]" style={{ fontFamily: "var(--font-display)" }}>
-              Born from the <span className="italic text-burnt">embers</span>.
+              Good food. <span className="italic text-burnt">Better company.</span>
             </h3>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70 mb-6">
-              A welcoming table, thoughtful hospitality, and food made to bring people
-              together — from the first meal of the day to the last.
+              A warm welcome, thoughtful hospitality, and a table ready for good company.
             </p>
             <p className="max-w-[55ch] text-base leading-relaxed text-ink/70">
-              Our kitchen serves through the day; our bar keeps company into the night;
-              our tables are yours for as long as you'd like them.
+              From everyday meals to special occasions, we look forward to hosting you.
             </p>
 
           </section>

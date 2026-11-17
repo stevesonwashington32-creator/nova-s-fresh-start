@@ -1,6 +1,6 @@
 import pineappleRice from "@/assets/pineapple-fried-rice.jpg";
 import barbecue from "@/assets/smoky-bbq.jpg";
-import jollof from "@/assets/jollof-rice.jpg";
+import jollof from "@/assets/nigerian-jollof.jpg";
 
 export type MenuCategory = "House favorites" | "From the grill";
 
@@ -25,10 +25,10 @@ export const menuItems: MenuItem[] = [
   {
     name: "Seasoned Rice",
     category: "House favorites",
-    description: "A richly seasoned rice dish served with grilled vegetables.",
+    description: "A richly seasoned rice dish served with grilled plantain.",
     note: "House favorite",
     image: jollof,
-    imageAlt: "Seasoned rice served with grilled vegetables",
+    imageAlt: "Seasoned rice served with grilled plantain",
   },
   {
     name: "Grilled Chicken or Turkey",

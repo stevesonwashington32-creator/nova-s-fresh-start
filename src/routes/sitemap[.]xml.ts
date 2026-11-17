@@ -4,12 +4,8 @@ import type {} from "@tanstack/react-start";
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        const requestUrl = new URL(request.url);
-        const forwardedHost = requestUrl.hostname === "localhost"
-          ? request.headers.get("x-forwarded-host")
-          : null;
-        const baseUrl = forwardedHost ? `https://${forwardedHost}` : requestUrl.origin;
+      GET: async () => {
+        const baseUrl = "https://reservation-management-site.lovable.app";
         const urls = [
           `  <url><loc>${baseUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
           `  <url><loc>${baseUrl}/menu</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
